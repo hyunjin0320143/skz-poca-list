@@ -59,4 +59,12 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
         font-size: 8px !important;
         padding: 2px 0 !important;
     }
+
+/* 보기 모드 전환 버튼 스타일 조정 */
+    #view-mode-btn {
+        padding: 8px 12px !important; /* 안쪽 여백 줄임 */
+        font-size: 13px !important;    /* 글자 크기 살짝 줄임 */
+        min-width: 60px !important;   /* 최소 너비 고정 */
+        white-space: nowrap !important; /* 글자가 절대 줄바꿈 되지 않게 함 */
+    }
 }

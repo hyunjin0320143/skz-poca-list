@@ -493,7 +493,8 @@ function createCard(poca) {
 
 document.getElementById('view-mode-btn').onclick = function() {
     isGroupedView = !isGroupedView;
-    this.innerText = isGroupedView ? "전체보기" : "리스트 보기";
+    // 텍스트를 "전체", "리스트"로 짧게 변경
+    this.innerText = isGroupedView ? "전체" : "리스트"; 
     render(document.querySelector('#filter-members .active').innerText);
 };
 
