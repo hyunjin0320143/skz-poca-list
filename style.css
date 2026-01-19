@@ -8,7 +8,12 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 .group-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; }
 .group-title span { color: #bbb; margin: 0 10px; font-weight: normal; }
 
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 12px; }
+.grid { 
+    display: grid; 
+    /* PC에서는 너무 작지 않게 기존 설정 유지 혹은 살짝 조정 */
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
+    gap: 12px; 
+}
 
 .poca-card { background: #f9f9f9; border-radius: 10px; overflow: hidden; cursor: pointer; transition: 0.3s; position: relative; display: flex; flex-direction: column; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 .poca-card img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; opacity: 0.25; transition: 0.3s; display: block; }
@@ -30,3 +35,28 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 .modal-content img { width: 100%; border-radius: 12px; display: block; margin-bottom: 15px; }
 .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #333; z-index: 10; }
 #modal-info { padding: 0 10px; text-align: left; }
+
+/* 모바일 화면 (가로 600px 이하) 강제 설정 */
+@media (max-width: 600px) {
+    .grid {
+        /* 화면을 무조건 4등분 합니다 */
+        grid-template-columns: repeat(4, 1fr) !important; 
+        gap: 6px !important; /* 모바일은 좁으니까 간격도 줄임 */
+        padding: 5px !important;
+    }
+
+    .poca-card {
+        padding: 0 !important;
+    }
+
+    .poca-card img {
+        width: 100%;
+        height: auto;
+    }
+
+    /* 이름표(category) 글자가 너무 크면 사진을 가리니까 작게 조절 */
+    .poca-label {
+        font-size: 8px !important;
+        padding: 2px 0 !important;
+    }
+}
