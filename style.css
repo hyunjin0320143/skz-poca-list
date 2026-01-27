@@ -27,20 +27,20 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
     width: 100%;        /* 너비를 꽉 채워야 중앙 정렬이 정확히 보입니다 */
     display: block;     /* 블록 요소로 설정 */
 }
-/* 수집된 포카의 라벨 스타일 */
-.poca-card.collected .poca-category {
-    background-color: rgba(0, 0, 0, 0.7); /* 배경을 조금 더 진하게 해서 글씨가 잘 보이게 */
-    color: #ffffff; /* 글자색은 흰색 유지 (이미지가 밝아지므로 흰색이 더 잘 보임) */
-    font-weight: 600; /* 글자를 조금 더 두껍게 */
-    opacity: 1; /* 투명도 없이 선명하게 */
+/* 5. 수집 안 된 포카: 은은한 색감 + 어두운 톤 */
+.poca-card:not(.collected) img {
+    /* 흑백(grayscale)을 빼거나 아주 낮게(20%) 설정해서 색감을 살립니다 */
+    filter: brightness(0.6) contrast(0.9) grayscale(20%);
+    /* 투명도를 너무 낮추지 않아 하얗게 뜨는 현상을 방지합니다 */
+    opacity: 0.8;
+    transition: filter 0.3s, opacity 0.3s;
 }
 
-/* 만약 수집된 카드에서 글자색만 검정으로 바꾸고 싶다면 아래처럼 하세요 */
-/* .poca-card.collected .poca-category {
-    background-color: rgba(255, 255, 255, 0.8); 
-    color: #000000;
+/* 마우스를 올렸을 때만 살짝 밝게 (선택사항) */
+.poca-card:not(.collected):hover img {
+    filter: brightness(0.8) contrast(1);
+    opacity: 0.9;
 }
-*/
 
 .footer-controls { position: fixed; bottom: 30px; width: 100%; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 30px; box-sizing: border-box; z-index: 200; pointer-events: none; }
 .footer-left, .footer-center, .footer-right { pointer-events: auto; display: flex; align-items: center; }
