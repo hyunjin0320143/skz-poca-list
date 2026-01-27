@@ -344,7 +344,7 @@ function createCard(poca) {
         updateCounter(activeBtn ? activeBtn.innerText : "전체");
     };
 
-    card.oncontextmenu = (e) => {
+  card.oncontextmenu = (e) => {
         e.preventDefault();
         const modal = document.getElementById('info-modal');
         const modalImg = document.getElementById('modal-img');
@@ -352,12 +352,12 @@ function createCard(poca) {
 
         if (modal) {
             modalImg.src = safeImgPath;
+            // 이름 부분을 삭제하고 앨범, 버전, 유니코드만 중앙 정렬로 남겼습니다.
             modalInfo.innerHTML = `
-                <div style="line-height: 1.6; text-align: left;">
-                    <b style="font-size: 1.2em; display: block; margin-bottom: 5px; color: #000;">${poca.member}</b>
-                    <strong style="color: #444;">${poca.album}</strong><br>
-                    <span style="color: #666;">${poca.version}</span><br>
-                    <small style="color: #bbb; display: block; margin-top: 8px;">#${poca.unicode}</small>
+                <div style="line-height: 1.5; text-align: center;">
+                    <strong style="color: #333; font-size: 1.1em;">${poca.album}</strong><br>
+                    <span style="color: #666; font-size: 0.9em;">${poca.version}</span><br>
+                    <small style="color: #ccc; display: block; margin-top: 5px;">#${poca.unicode}</small>
                 </div>`;
             modal.style.display = 'flex';
         }
