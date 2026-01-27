@@ -1196,26 +1196,34 @@ function updateCounter(member = "전체", searchTerm = "") {
     if(document.getElementById('total-count')) document.getElementById('total-count').innerText = filtered.length;
 }
 
-// 확실하게 닫기 기능을 수행하는 함수
-function closeInfoModal() {
-    const modal = document.getElementById('info-modal');
-    if (modal) {
-        modal.style.display = 'none';
-        console.log("모달 닫힘 실행됨"); // 작동 여부 확인용
-    }
-}
+// [최종 정리] 정보창 어디든 클릭하면 닫기
+const finalModal = document.getElementById('info-modal');
 
-// 모달 영역(배경+컨텐츠 전체) 클릭 시 무조건 닫기
-const modalElement = document.getElementById('info-modal');
-if (modalElement) {
-    modalElement.onclick = function() {
-        closeInfoModal();
+if (finalModal) {
+    // 1. 배경이든 이미지든 모달 영역을 클릭하면 무조건 닫기
+    finalModal.onclick = function() {
+        finalModal.style.display = 'none';
+        console.log("정보창이 클릭되어 닫혔습니다.");
     };
 }
 
-// ESC 키를 눌러도 꺼지게 추가 (보험용)
-window.onkeydown = function(event) {
-    if (event.key === "Escape") {
-        closeInfoModal();
-    }
-};
+    // 2. 배경(검은 영역)을 눌러도 닫히게 설정 (이벤트 전파 방지 해제)
+    window.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            console.log("배경 클릭으로 닫힘");
+        }
+    });
+}
+
+// 3. 우클릭 시 창이 바로 닫히는 현상을 막기 위해 createCard 안의
+// card.oncontextmenu 부분에 반드시 e.stopPropagation(); 이 있어야 합니다!
+
+// 모달 전체(배경 포함)를 클릭하면 무조건 닫기
+const infoModalElement = document.getElementById('info-modal');
+
+if (infoModalElement) {
+    infoModalElement.addEventListener('click', function() {
+        infoModalElement.style.display = 'none';
+    });
+}
