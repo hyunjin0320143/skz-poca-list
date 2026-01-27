@@ -35,8 +35,7 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
     width: 100%; 
     aspect-ratio: 2 / 3; 
     object-fit: cover; 
-    opacity: 0.45; /* 색감이 살짝 보이도록 0.25에서 상향 */
-    filter: brightness(0.9); /* 약간 어둡게 눌러줌 */
+    opacity: 0.25; /* 색감이 살짝 보이도록 0.25에서 상향 */
     transition: 0.3s; 
     display: block; 
 }

@@ -412,17 +412,16 @@ function render(filterMember = "전체") {
     if (!gridContainer) return;
     gridContainer.innerHTML = '';
     
-    // 전체 보기일 때는 컨테이너 자체가 그리드가 됨
+    // 기본적으로 grid 클래스를 부여 (전체 보기용)
     gridContainer.className = 'grid'; 
     
     const filtered = filterMember === "전체" ? pocaData : pocaData.filter(p => p.member === filterMember);
 
     if (!isGroupedView) {
-        // [전체 보기]
+        // [전체 보기 모드] - 정렬 없이 기존 순서 그대로!
         filtered.forEach(poca => gridContainer.appendChild(createCard(poca)));
     } else {
-        // [리스트(그룹) 보기]
-        // 그룹 모드일 때는 메인 컨테이너의 그리드 속성을 해제해야 제목이 세로로 나열됨
+        // [리스트(그룹) 보기 모드] - 그룹 내 멤버 정렬 적용
         gridContainer.className = 'list-mode-container'; 
 
         const groups = {};
@@ -435,14 +434,19 @@ function render(filterMember = "전체") {
         for (const [title, pocast] of Object.entries(groups)) {
             const section = document.createElement('div');
             section.className = 'group-section';
-            
-            // 제목 부분
             section.innerHTML = `<div class="group-title">${title}</div>`;
             
-            // 포카들을 담을 가로 정렬 박스
             const subGrid = document.createElement('div');
-            // CSS에서 정의한 .grid 클래스를 명확하게 부여
             subGrid.classList.add('grid'); 
+            
+            // ★ 핵심: 이 그룹 안에서만 멤버 순서대로 정렬 (방찬이 0순위)
+            pocast.sort((a, b) => {
+                let indexA = memberOrder.indexOf(a.member);
+                let indexB = memberOrder.indexOf(b.member);
+                if (indexA === -1) indexA = 99;
+                if (indexB === -1) indexB = 99;
+                return indexA - indexB;
+            });
             
             pocast.forEach(poca => subGrid.appendChild(createCard(poca)));
             section.appendChild(subGrid);
@@ -451,6 +455,7 @@ function render(filterMember = "전체") {
     }
     updateCounter(filterMember); 
 }
+
 // 5. 카드 한 장 만드는 함수 (우클릭 모달 포함)
 function createCard(poca) {
     const card = document.createElement('div');
