@@ -186,37 +186,36 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 .top-row {
     display: flex;
     align-items: center;
-    gap: 10px; /* 검색창과 버튼 사이 간격 */
+    gap: 8px; /* 간격을 조금 좁혀서 공간 확보 */
     width: 100%;
+    flex-wrap: nowrap; /* ★ 절대 줄바꿈 되지 않도록 설정 */
 }
 
 /* 검색창 디자인 */
 #search-input {
-    flex: 1; /* 검색창이 가능한 넓게 공간을 차지함 */
-    padding: 10px 15px;
+    flex: 1; /* 남는 공간을 차지하되 */
+    min-width: 0; /* ★ 중요: 너비가 유연하게 줄어들 수 있도록 설정 */
+    padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 13px; /* 모바일에서 글씨 크기 살짝 조절 */
     outline: none;
-    background-color: #f9f9f9;
 }
 
 /* 내보내기/가져오기 버튼 디자인 */
 .data-btns {
     display: flex;
-    gap: 5px;
+    gap: 4px; /* 버튼 사이 간격 최소화 */
+    flex-shrink: 0; /* ★ 버튼 뭉치가 찌그러지지 않도록 설정 */
 }
 
 #export-btn, #import-btn {
-    padding: 8px 15px;
-    font-weight: bold;
+    padding: 8px 10px;
+    font-size: 11px;
     background: #ffffff;
     border: 1px solid #eee;
     border-radius: 8px;
-    color: #666;
-    cursor: pointer;
-    white-space: nowrap; /* 글자가 한 줄로 나오게 */
-    transition: background 0.2s;
+    white-space: nowrap; /* 글자가 절대 밑으로 안 내려가게 */
 }
 
 #export-btn:hover, #import-btn:hover {
@@ -231,16 +230,12 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
     justify-content: flex-start;
 }
 
-/* 모바일 전용: 화면이 너무 좁으면 버튼들을 아래로 보냄 */
-@media (max-width: 480px) {
-    .top-row {
-        flex-wrap: wrap; 
-    }
+/* 모바일 전용 미세 조정 (가장 좁은 폰 기준) */
+@media (max-width: 360px) {
     #search-input {
-        min-width: 100%; /* 모바일은 검색창을 꽉 차게 */
+        padding: 8px; /* 안쪽 여백 줄임 */
     }
-    .data-btns {
-        width: 100%;
-        justify-content: flex-end; /* 버튼은 오른쪽 끝으로 */
+    #export-btn, #import-btn {
+        padding: 6px 8px; /* 버튼 크기 살짝 줄임 */
     }
 }
