@@ -1166,14 +1166,18 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // [중요] 정보창 닫기 기능 (DOMContentLoaded 내부에 포함)
+// [수정] 정보창 닫기 및 클릭 전파 방지
     const modal = document.getElementById('info-modal');
     if (modal) {
-        modal.onclick = () => {
+        modal.addEventListener('click', function(e) {
+            // 정보창(이미지 포함) 어디든 누르면 닫기
             modal.style.display = 'none';
-        };
+            
+            // ★ 중요: 클릭 신호가 뒤에 있는 포카 리스트로 전달되지 않게 차단!
+            e.stopPropagation();
+            e.preventDefault();
+        });
     }
-});
 
 // 7. 카운터 업데이트
 function updateCounter(member = "전체", searchTerm = "") {

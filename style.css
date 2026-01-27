@@ -73,29 +73,27 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 .modal { 
     display: none; 
     position: fixed; 
-    z-index: 9999; /* 최상단으로 올림 */
+    z-index: 99999; /* 다른 모든 요소보다 위에 있도록 매우 높게 설정 */
     left: 0;
     top: 0;
     width: 100vw;  /* 화면 너비 100% */
     height: 100vh; /* 화면 높이 100% */
-    background: rgba(0,0,0,0.7); /* 배경을 어둡게 해야 클릭이 잘 먹힙니다 */
+    background: rgba(0, 0, 0, 0.7); /* 배경을 어둡게 설정 */
     align-items: center; 
-    justify-content: center; 
-    cursor: pointer; /* 배경을 누르면 닫힌다는 느낌을 줌 */
+    justify-content: center;
+    pointer-events: auto; /* 클릭을 이 레이어가 직접 받도록 설정 */
 }
 
 .modal-content { 
     position: relative; 
+    z-index: 100000; /* 하얀 박스는 배경보다 더 위에 */
     background: white; 
     padding: 20px; 
     width: 85%; 
     max-width: 300px; 
     border-radius: 20px; 
     text-align: center; 
-    height: auto !important; 
-    max-height: 90vh; 
-    overflow-y: auto; 
-    cursor: default; /* 하얀 박스 안은 기본 화살표 커서 */
+    cursor: default; /* 박스 안에서는 기본 커서 */
 }
 
 .modal-content img { 
