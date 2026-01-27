@@ -1066,6 +1066,7 @@ function createCard(poca) {
 
 card.oncontextmenu = (e) => {
         e.preventDefault();
+        e.stopPropagation(); // ★ 이 줄이 반드시 있어야 합니다! ★
         const modal = document.getElementById('info-modal');
         const modalImg = document.getElementById('modal-img');
         const modalInfo = document.getElementById('modal-info');
@@ -1195,32 +1196,26 @@ function updateCounter(member = "전체", searchTerm = "") {
     if(document.getElementById('total-count')) document.getElementById('total-count').innerText = filtered.length;
 }
 
-// 1. 모달 요소 가져오기
-const infoModal = document.getElementById('info-modal');
-
-// 2. 정보창 내부나 외부 어디든 클릭하면 닫기
-infoModal.addEventListener('click', function() {
-    infoModal.style.display = 'none';
-});
-
-// 3. 우클릭 시 창이 바로 닫히지 않도록 방어 (기존 코드 수정)
-// createCard 함수 안의 card.oncontextmenu 부분을 아래처럼 수정하세요.
-card.oncontextmenu = (e) => {
-    e.preventDefault();
-    e.stopPropagation(); // ★ 이 줄이 핵심입니다! (이벤트가 위로 퍼지는 걸 막음)
-    
+// 확실하게 닫기 기능을 수행하는 함수
+function closeInfoModal() {
     const modal = document.getElementById('info-modal');
-    const modalImg = document.getElementById('modal-img');
-    const modalInfo = document.getElementById('modal-info');
-
     if (modal) {
-        modalImg.src = safeImgPath;
-        modalInfo.innerHTML = `
-            <div style="line-height: 1.5; text-align: left; padding: 0 10px;">
-                <strong style="color: #333; font-size: 1.1em;">${poca.album}</strong><br>
-                <span style="color: #666; font-size: 0.9em;">${poca.version}</span><br>
-                <small style="color: #ccc; display: block; margin-top: 5px;">#${poca.unicode}</small>
-            </div>`;
-        modal.style.display = 'flex';
+        modal.style.display = 'none';
+        console.log("모달 닫힘 실행됨"); // 작동 여부 확인용
+    }
+}
+
+// 모달 영역(배경+컨텐츠 전체) 클릭 시 무조건 닫기
+const modalElement = document.getElementById('info-modal');
+if (modalElement) {
+    modalElement.onclick = function() {
+        closeInfoModal();
+    };
+}
+
+// ESC 키를 눌러도 꺼지게 추가 (보험용)
+window.onkeydown = function(event) {
+    if (event.key === "Escape") {
+        closeInfoModal();
     }
 };
