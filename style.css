@@ -77,26 +77,29 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #333; z-index: 10; }
 #modal-info { padding: 0 10px; text-align: left; line-height: 1.6; }
 
-/* 7. 모바일용 레이아웃 (가로 4장 최종 보강형) */
-@media (max-width: 600px) {
-    #poca-container, 
-    #pcGrid, 
+/* 7. 모바일용 레이아웃 (모든 경로 강제 설정) */
+@media screen and (max-width: 600px) {
+    /* 이 줄에 적힌 모든 곳의 그리드를 4칸으로 강제 고정합니다 */
     .grid, 
-    .group-section .grid, 
-    .list-mode-container .grid {  /* <-- 이 부분을 추가하면 더 확실합니다 */
+    #poca-container.grid, 
+    .list-mode-container .grid, 
+    .group-section .grid,
+    div[class*="grid"] { 
         display: grid !important;
-        grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)) !important;
+        /* 75px는 모바일 화면에서 4장이 들어가는 최적의 수치입니다 */
+        grid-template-columns: repeat(4, 1fr) !important; 
         gap: 8px !important;
-        padding: 10px 0;
+        width: 100% !important;
+        padding: 10px 0 !important;
+    }
+
+    /* 포카 카드가 밀리지 않도록 고정 */
+    .poca-card {
+        width: 100% !important;
     }
 
     .group-section {
-        padding: 0 10px;
-    }
-
-    .group-title {
-        font-size: 14px;
-        margin-top: 25px;
-        text-align: left; /* 제목은 왼쪽 정렬 */
+        padding: 0 5px !important;
+        margin-bottom: 20px !important;
     }
 }

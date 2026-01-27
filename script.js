@@ -276,21 +276,24 @@ const pocaData = rawPaths.map(path => {
 
 // 4. 화면을 그려주는 함수 (render)
 function render(filterMember = "전체") {
+    function render(filterMember = "전체") {
     const gridContainer = document.getElementById('poca-container') || document.getElementById('pcGrid');
     if (!gridContainer) return;
     gridContainer.innerHTML = '';
     
-    // 기본적으로 grid 클래스를 부여 (전체 보기용)
+    // [중요] 리스트 모드든 전체 모드든 일단 'grid' 클래스는 유지합니다.
     gridContainer.className = 'grid'; 
     
     const filtered = filterMember === "전체" ? pocaData : pocaData.filter(p => p.member === filterMember);
 
     if (!isGroupedView) {
-        // [전체 보기 모드] - 정렬 없이 기존 순서 그대로!
+        // [전체 보기 모드]
         filtered.forEach(poca => gridContainer.appendChild(createCard(poca)));
     } else {
-        // [리스트(그룹) 보기 모드] - 그룹 내 멤버 정렬 적용
-        gridContainer.className = 'list-mode-container'; 
+        // [리스트(그룹) 보기 모드]
+        // 부모가 grid이면 제목까지 가로로 정렬될 수 있으므로, 
+        // 리스트 모드 전용 클래스를 '추가'만 합니다.
+        gridContainer.classList.add('list-mode-active'); 
 
         const groups = {};
         filtered.forEach(p => {
@@ -305,9 +308,9 @@ function render(filterMember = "전체") {
             section.innerHTML = `<div class="group-title">${title}</div>`;
             
             const subGrid = document.createElement('div');
-            subGrid.classList.add('grid'); 
+            // 여기서 클래스를 'grid'로 확실히 박아줍니다.
+            subGrid.className = 'grid'; 
             
-            // ★ 핵심: 이 그룹 안에서만 멤버 순서대로 정렬 (방찬이 0순위)
             pocast.sort((a, b) => {
                 let indexA = memberOrder.indexOf(a.member);
                 let indexB = memberOrder.indexOf(b.member);
