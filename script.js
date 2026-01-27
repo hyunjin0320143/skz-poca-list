@@ -410,16 +410,20 @@ const pocaData = rawPaths.map(path => {
 function render(filterMember = "전체") {
     const gridContainer = document.getElementById('poca-container') || document.getElementById('pcGrid');
     if (!gridContainer) return;
+    
+    // 1. 기존 내용 비우기
     gridContainer.innerHTML = '';
+    
+    // 2. 바구니에 직접 'grid' 클래스 추가 (이게 핵심!)
+    gridContainer.className = 'grid'; 
     
     const filtered = filterMember === "전체" ? pocaData : pocaData.filter(p => p.member === filterMember);
 
     if (!isGroupedView) {
-        const grid = document.createElement('div');
-        grid.className = 'grid';
-        filtered.forEach(poca => grid.appendChild(createCard(poca)));
-        gridContainer.appendChild(grid);
+        // 리스트 모드일 때: 바구니에 바로 카드들을 넣음
+        filtered.forEach(poca => gridContainer.appendChild(createCard(poca)));
     } else {
+        // 그룹 모드일 때
         const groups = {};
         filtered.forEach(p => {
             const key = `${p.album} | ${p.version}`;
@@ -431,10 +435,12 @@ function render(filterMember = "전체") {
             const section = document.createElement('div');
             section.className = 'group-section';
             section.innerHTML = `<div class="group-title">${title}</div>`;
-            const grid = document.createElement('div');
-            grid.className = 'grid';
-            pocast.forEach(poca => grid.appendChild(createCard(poca)));
-            section.appendChild(grid);
+            
+            const subGrid = document.createElement('div');
+            subGrid.className = 'grid'; // 그룹 내부도 격자 적용
+            pocast.forEach(poca => subGrid.appendChild(createCard(poca)));
+            
+            section.appendChild(subGrid);
             gridContainer.appendChild(section);
         }
     }
