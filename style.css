@@ -154,34 +154,56 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
     display: block;
 }
 
+/* 배경 및 중앙 정렬 */
 .modal {
     display: none; 
     position: fixed; 
     z-index: 9999; 
-    left: 0; top: 0; width: 100%; height: 100%; 
-    background-color: rgba(0,0,0,0.8);
+    left: 0; top: 0; 
+    width: 100%; height: 100%; 
+    background-color: rgba(0,0,0,0.7); /* 배경 밝기 살짝 조절 */
     justify-content: center;
     align-items: center;
 }
 
+/* 흰색 카드 상자 (너비 고정 및 패딩 조절) */
 .modal-content {
     background-color: white;
-    padding: 20px;
-    border-radius: 15px;
-    max-width: 90%;
+    padding: 25px; /* 안쪽 여백을 줘서 더 깔끔하게 */
+    border-radius: 20px; /* 좀 더 부드러운 모서리 */
+    width: 320px; /* 포카 이미지 비율에 딱 예쁜 너비 */
     text-align: center;
     position: relative;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
 }
 
+/* 이미지 스타일 (비율 고정) */
+#modal-img {
+    width: 100%; /* 상자 너비에 맞게 */
+    height: auto; /* 비율 유지하며 높이 자동 조절 */
+    border-radius: 12px;
+    margin-bottom: 20px; /* 이미지와 텍스트 사이 간격 */
+}
+
+/* 하단 정보 텍스트 정렬 */
+#modal-info {
+    text-align: left; /* 예시 이미지처럼 왼쪽 정렬 */
+    padding: 0 5px;
+    font-size: 15px;
+    color: #333;
+    line-height: 1.8;
+}
+
+/* 닫기 버튼 스타일 */
 .close-btn {
     position: absolute;
-    top: 10px; right: 15px;
-    font-size: 24px;
+    top: 15px; right: 20px;
+    font-size: 28px;
+    color: #999;
     cursor: pointer;
+    line-height: 1;
 }
 
-#modal-img {
-    max-width: 100%;
-    max-height: 70vh;
-    border-radius: 10px;
+.close-btn:hover {
+    color: #000;
 }
