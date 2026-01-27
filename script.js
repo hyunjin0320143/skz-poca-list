@@ -603,14 +603,14 @@ const rawPaths = [
 "./images/benefit/SKZOO'S MAGIC SCHOOL in BUSAN/IN_SKZOO'S MAGIC SCHOOL in BUSAN_JYP SHOP_24050108.jpg",
 
 // === BENEFIT / SKZOO'S MAGIC SCHOOL ===
-"./images/benefit/SKZOO'S MAGIC SHOOL/BANG_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030101.jpg",
-"./images/benefit/SKZOO'S MAGIC SHOOL/KNOW_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030102.jpg",
-"./images/benefit/SKZOO'S MAGIC SHOOL/BIN_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030103.jpg",
-"./images/benefit/SKZOO'S MAGIC SHOOL/HYUN_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030104.jpg",
-"./images/benefit/SKZOO'S MAGIC SHOOL/HAN_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030105.jpg",
-"./images/benefit/SKZOO'S MAGIC SHOOL/LIX_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030106.jpg",
-"./images/benefit/SKZOO'S MAGIC SHOOL/MIN_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030107.jpg",
-"./images/benefit/SKZOO'S MAGIC SHOOL/IN_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030108.jpg",
+"./images/benefit/SKZOO'S MAGIC SCHOOL/BANG_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030101.jpg",
+"./images/benefit/SKZOO'S MAGIC SCHOOL/KNOW_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030102.jpg",
+"./images/benefit/SKZOO'S MAGIC SCHOOL/BIN_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030103.jpg",
+"./images/benefit/SKZOO'S MAGIC SCHOOL/HYUN_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030104.jpg",
+"./images/benefit/SKZOO'S MAGIC SCHOOL/HAN_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030105.jpg",
+"./images/benefit/SKZOO'S MAGIC SCHOOL/LIX_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030106.jpg",
+"./images/benefit/SKZOO'S MAGIC SCHOOL/MIN_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030107.jpg",
+"./images/benefit/SKZOO'S MAGIC SCHOOL/IN_SKZOO'S MAGIC SCHOOL_POP-UP MD_24030108.jpg",
 
 // === BENEFIT / TAMAGOTCHI ===
 "./images/benefit/TAMAGOTCHI/BANG_TAMAGOTCHI_FANS SHOP_25040101.jpg",
@@ -1200,3 +1200,14 @@ function updateCounter(member = "전체", searchTerm = "") {
     if(document.getElementById('collect-count')) document.getElementById('collect-count').innerText = collected;
     if(document.getElementById('total-count')) document.getElementById('total-count').innerText = filtered.length;
 }
+
+// 정보창(모달) 요소를 가져옵니다.
+const infoModal = document.getElementById('info-modal');
+
+// 화면 어디든 클릭했을 때 실행되는 함수
+window.addEventListener('click', function(event) {
+    // 만약 클릭한 곳이 '모달 배경(info-modal)'이라면?
+    if (event.target === infoModal) {
+        infoModal.style.display = 'none'; // 창을 닫습니다.
+    }
+});
