@@ -446,14 +446,16 @@ function createCard(poca) {
     if (localStorage.getItem(poca.unicode) === 'true') card.classList.add('collected');
     
     const safeImgPath = encodeURI(poca.img);
+    
+    // 포카 하단에는 카테고리(폴더명)만 소문자로 표시
     card.innerHTML = `
         <img src="${safeImgPath}">
         <div class="poca-label">
-            ${poca.member} - ${poca.version}<br>
-            <span class="poca-category">${poca.category}</span>
+            <span class="poca-category">${poca.category.toLowerCase()}</span>
         </div>
     `;
     
+    // 왼쪽 클릭: 수집 체크
     card.onclick = () => {
         card.classList.toggle('collected');
         localStorage.setItem(poca.unicode, card.classList.contains('collected'));
@@ -461,6 +463,7 @@ function createCard(poca) {
         updateCounter(activeBtn ? activeBtn.innerText : "전체");
     };
 
+    // 우클릭: 상세 정보(멤버, 버전, 앨범 등) 출력
     card.oncontextmenu = (e) => {
         e.preventDefault();
         const modal = document.getElementById('info-modal');
@@ -471,10 +474,11 @@ function createCard(poca) {
             modalImg.src = safeImgPath;
             modalInfo.innerHTML = `
                 <div style="line-height: 1.6;">
-                    <strong style="font-size: 1.1em;">${poca.album}</strong><br>
+                    <b style="font-size: 1.1em; display: block; margin-bottom: 5px;">${poca.member}</b>
+                    <strong>${poca.album}</strong><br>
                     <span>${poca.version}</span><br>
-                    <span style="color: #ef5350; font-weight: bold;">${poca.category}</span><br>
-                    <small style="color: #888;">#${poca.unicode}</small>
+                    <span style="color: #888; font-size: 0.9em;">category: ${poca.category.toLowerCase()}</span><br>
+                    <small style="color: #bbb;">#${poca.unicode}</small>
                 </div>`;
             modal.style.display = 'flex';
         }
@@ -482,6 +486,7 @@ function createCard(poca) {
 
     return card;
 }
+
 // 6. 페이지 로드 시 초기화 및 모든 버튼/모달 설정
 document.addEventListener('DOMContentLoaded', () => {
     render();
