@@ -407,19 +407,24 @@ const pocaData = rawPaths.map(path => {
 }).sort((a, b) => parseInt(b.unicode) - parseInt(a.unicode));
 
 // 4. 화면을 그려주는 함수 (render)
-// 4. 화면에 포카 목록을 그리는 함수
-// 4. 화면에 포카 목록을 그리는 함수
 function render(filterMember = "전체") {
     const gridContainer = document.getElementById('poca-container') || document.getElementById('pcGrid');
     if (!gridContainer) return;
     gridContainer.innerHTML = '';
+    
+    // 전체 보기일 때는 컨테이너 자체가 그리드가 됨
     gridContainer.className = 'grid'; 
     
     const filtered = filterMember === "전체" ? pocaData : pocaData.filter(p => p.member === filterMember);
 
     if (!isGroupedView) {
+        // [전체 보기]
         filtered.forEach(poca => gridContainer.appendChild(createCard(poca)));
     } else {
+        // [리스트(그룹) 보기]
+        // 그룹 모드일 때는 메인 컨테이너의 그리드 속성을 해제해야 제목이 세로로 나열됨
+        gridContainer.className = 'list-mode-container'; 
+
         const groups = {};
         filtered.forEach(p => {
             const key = `${p.album} | ${p.version}`;
@@ -430,9 +435,15 @@ function render(filterMember = "전체") {
         for (const [title, pocast] of Object.entries(groups)) {
             const section = document.createElement('div');
             section.className = 'group-section';
+            
+            // 제목 부분
             section.innerHTML = `<div class="group-title">${title}</div>`;
+            
+            // 포카들을 담을 가로 정렬 박스
             const subGrid = document.createElement('div');
-            subGrid.className = 'grid';
+            // CSS에서 정의한 .grid 클래스를 명확하게 부여
+            subGrid.classList.add('grid'); 
+            
             pocast.forEach(poca => subGrid.appendChild(createCard(poca)));
             section.appendChild(subGrid);
             gridContainer.appendChild(section);
@@ -440,7 +451,6 @@ function render(filterMember = "전체") {
     }
     updateCounter(filterMember); 
 }
-
 // 5. 카드 한 장 만드는 함수 (우클릭 모달 포함)
 function createCard(poca) {
     const card = document.createElement('div');
