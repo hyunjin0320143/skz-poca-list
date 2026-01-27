@@ -198,3 +198,23 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
     width: 100%;
     height: auto;
     border-radius: 12px;
+
+/* 모바일용 레이아웃 (화면 너비가 600px 이하일 때) */
+@media (max-width: 600px) {
+    #poca-container, #pcGrid, .grid {
+        /* 한 줄에 4개가 들어가도록 최소 크기를 80px 정도로 조정 */
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)) !important;
+        gap: 8px !important; /* 모바일에서는 간격을 조금 더 좁게 */
+        padding: 10px;
+    }
+
+    .poca-card {
+        width: 100%; /* 그리드 칸 너비에 맞게 자동 조절 */
+    }
+
+    /* 모바일에서는 글자 크기를 아주 조금 더 줄여서 깔끔하게 */
+    .poca-category {
+        font-size: 8px;
+        padding: 2px 4px;
+    }
+}
