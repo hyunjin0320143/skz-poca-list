@@ -995,13 +995,12 @@ const pocaData = rawPaths.map(path => {
 // 4. 화면에 포카 목록을 그리는 함수
 function render(filterMember = "전체") {
     const gridContainer = document.getElementById('poca-container') || document.getElementById('pcGrid');
-    const searchInput = document.getElementById('search-input'); // 검색창 ID 확인
+    const searchInput = document.getElementById('search-input');
     if (!gridContainer) return;
     
     gridContainer.innerHTML = '';
     const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
 
-    // 1. 멤버 필터링 + 2. 검색어 필터링 (앨범명이나 버전명에 검색어가 포함되었는지 확인)
     let filtered = pocaData.filter(p => {
         const matchesMember = (filterMember === "전체" || p.member === filterMember);
         const matchesSearch = p.album.toLowerCase().includes(searchTerm) || 
@@ -1064,16 +1063,15 @@ function createCard(poca) {
         updateCounter(activeBtn ? activeBtn.innerText : "전체");
     };
 
-card.oncontextmenu = (e) => {
+    card.oncontextmenu = (e) => {
         e.preventDefault();
-        e.stopPropagation(); // ★ 이 줄이 반드시 있어야 합니다! ★
+        e.stopPropagation(); 
         const modal = document.getElementById('info-modal');
         const modalImg = document.getElementById('modal-img');
         const modalInfo = document.getElementById('modal-info');
 
         if (modal) {
             modalImg.src = safeImgPath;
-            // text-align을 center에서 다시 left로 변경했습니다.
             modalInfo.innerHTML = `
                 <div style="line-height: 1.5; text-align: left; padding: 0 10px;">
                     <strong style="color: #333; font-size: 1.1em;">${poca.album}</strong><br>
@@ -1087,7 +1085,7 @@ card.oncontextmenu = (e) => {
     return card;
 }
 
-// 6. 페이지 로드 시 초기화 및 모든 버튼 설정
+// 6. 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', () => {
     render();
     
@@ -1119,21 +1117,16 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    const modal = document.getElementById('info-modal');
-    const closeBtn = document.querySelector('.close-btn');
-const searchInput = document.getElementById('search-input');
+    const searchInput = document.getElementById('search-input');
     if (searchInput) {
         searchInput.oninput = () => {
-            // 현재 어떤 멤버 버튼이 활성화(active) 되어 있는지 찾습니다.
             const activeBtn = document.querySelector('#filter-members .filter-btn.active');
-            // 버튼이 눌려있으면 그 이름(예: 방찬)을 쓰고, 없으면 "전체"를 사용합니다.
             const currentMember = activeBtn ? activeBtn.innerText : "전체";
-            
-            // 검색어에 맞춰 다시 그리기!
             render(currentMember);
         };
     }
-const exportBtn = document.getElementById('export-btn');
+
+    const exportBtn = document.getElementById('export-btn');
     if (exportBtn) {
         exportBtn.onclick = () => {
             const collectedIds = pocaData
@@ -1144,45 +1137,46 @@ const exportBtn = document.getElementById('export-btn');
                 alert("체크된 포카가 하나도 없어서 백업할 데이터가 없어요!");
                 return;
             }
-
             const dataString = btoa(encodeURIComponent(JSON.stringify(collectedIds)));
-            
             const textArea = document.createElement("textarea");
             document.body.appendChild(textArea);
             textArea.value = dataString;
             textArea.select();
             document.execCommand('copy');
             document.body.removeChild(textArea);
-            
-            alert("백업 코드가 복사되었습니다! 메모장이나 카톡에 보관하세요.");
+            alert("백업 코드가 복사되었습니다!");
         };
     }
 
     const importBtn = document.getElementById('import-btn');
     if (importBtn) {
         importBtn.onclick = () => {
-            const code = prompt("복사했던 백업 코드를 입력해주세요.");
+            const code = prompt("백업 코드를 입력해주세요.");
             if (!code) return;
-
             try {
                 const decodedIds = JSON.parse(decodeURIComponent(atob(code)));
-                if (confirm(`${decodedIds.length}개의 데이터를 불러올까요? 기존 데이터는 사라집니다.`)) {
+                if (confirm(`${decodedIds.length}개의 데이터를 불러올까요?`)) {
                     pocaData.forEach(p => localStorage.removeItem(p.unicode));
                     decodedIds.forEach(id => localStorage.setItem(id, 'true'));
                     location.reload();
                 }
             } catch (e) {
-                alert("코드가 올바르지 않습니다. 다시 확인해주세요.");
+                alert("코드가 올바르지 않습니다.");
             }
         };
     }
-    // ★ 추가 끝 ★
 
-}); // <-- DOMContentLoaded가 끝나는 지점
+    // [중요] 정보창 닫기 기능 (DOMContentLoaded 내부에 포함)
+    const modal = document.getElementById('info-modal');
+    if (modal) {
+        modal.onclick = () => {
+            modal.style.display = 'none';
+        };
+    }
+});
 
-// 7. 카운터 업데이트 함수 (검색 결과까지 반영)
+// 7. 카운터 업데이트
 function updateCounter(member = "전체", searchTerm = "") {
-    // 멤버 필터 + 검색어 필터를 동일하게 적용
     const filtered = pocaData.filter(p => {
         const matchesMember = (member === "전체" || p.member === member);
         const matchesSearch = p.album.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -1194,36 +1188,4 @@ function updateCounter(member = "전체", searchTerm = "") {
     
     if(document.getElementById('collect-count')) document.getElementById('collect-count').innerText = collected;
     if(document.getElementById('total-count')) document.getElementById('total-count').innerText = filtered.length;
-}
-
-// [최종 정리] 정보창 어디든 클릭하면 닫기
-const finalModal = document.getElementById('info-modal');
-
-if (finalModal) {
-    // 1. 배경이든 이미지든 모달 영역을 클릭하면 무조건 닫기
-    finalModal.onclick = function() {
-        finalModal.style.display = 'none';
-        console.log("정보창이 클릭되어 닫혔습니다.");
-    };
-}
-
-    // 2. 배경(검은 영역)을 눌러도 닫히게 설정 (이벤트 전파 방지 해제)
-    window.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-            console.log("배경 클릭으로 닫힘");
-        }
-    });
-}
-
-// 3. 우클릭 시 창이 바로 닫히는 현상을 막기 위해 createCard 안의
-// card.oncontextmenu 부분에 반드시 e.stopPropagation(); 이 있어야 합니다!
-
-// 모달 전체(배경 포함)를 클릭하면 무조건 닫기
-const infoModalElement = document.getElementById('info-modal');
-
-if (infoModalElement) {
-    infoModalElement.addEventListener('click', function() {
-        infoModalElement.style.display = 'none';
-    });
 }
