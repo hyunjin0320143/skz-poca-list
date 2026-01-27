@@ -448,10 +448,12 @@ function createCard(poca) {
     const safeImgPath = encodeURI(poca.img);
     card.innerHTML = `
         <img src="${safeImgPath}">
-        <div class="poca-label">${poca.member} - ${poca.version}</div>
+        <div class="poca-label">
+            ${poca.member} - ${poca.version}<br>
+            <span class="poca-category">${poca.category}</span>
+        </div>
     `;
     
-    // 왼쪽 클릭: 수집
     card.onclick = () => {
         card.classList.toggle('collected');
         localStorage.setItem(poca.unicode, card.classList.contains('collected'));
@@ -459,7 +461,6 @@ function createCard(poca) {
         updateCounter(activeBtn ? activeBtn.innerText : "전체");
     };
 
-    // 우클릭: 정보창 띄우기 (이 코드가 들어갔는지 확인하세요!)
     card.oncontextmenu = (e) => {
         e.preventDefault();
         const modal = document.getElementById('info-modal');
@@ -470,8 +471,9 @@ function createCard(poca) {
             modalImg.src = safeImgPath;
             modalInfo.innerHTML = `
                 <div style="line-height: 1.6;">
-                    <strong>${poca.album}</strong><br>
+                    <strong style="font-size: 1.1em;">${poca.album}</strong><br>
                     <span>${poca.version}</span><br>
+                    <span style="color: #ef5350; font-weight: bold;">${poca.category}</span><br>
                     <small style="color: #888;">#${poca.unicode}</small>
                 </div>`;
             modal.style.display = 'flex';
@@ -480,7 +482,6 @@ function createCard(poca) {
 
     return card;
 }
-
 // 6. 페이지 로드 시 초기화 및 모든 버튼/모달 설정
 document.addEventListener('DOMContentLoaded', () => {
     render();
