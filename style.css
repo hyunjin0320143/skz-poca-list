@@ -150,8 +150,8 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 /* 3. 이미지 위 왼쪽 하단 라벨 */
 .poca-label {
     position: absolute;
-    bottom: 0px;
-    left: 0px;
+    bottom: 2px;
+    left: 2px;
     padding: 5px;
     background: none !important;
     border: none !important;
