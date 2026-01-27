@@ -31,7 +31,7 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 .poca-card:not(.collected) img {
     filter: brightness(0.9);
     /* 투명도를 너무 낮추지 않아 하얗게 뜨는 현상을 방지합니다 */
-    opacity: 0.5;
+    opacity: 0.7;
     transition: opacity 0.3s ease, filter 0.3s ease;
 }
 
