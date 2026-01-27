@@ -379,37 +379,10 @@ const rawPaths = [
   "./images/benefit/KARMA/SKZ_KARMA_POP-UP ALBUM SET PURCHASE 1ST_25081311.jpg"
 ];
 
-// ... 위쪽의 rawPaths 데이터 부분은 그대로 두세요 ...
-
-// 1. 데이터 가공 및 정렬
-const pocaData = rawPaths.map(path => {
-    const pathParts = path.split('/');
-    const fileName = pathParts[pathParts.length - 1];
-    const fileNameParts = fileName.split('_');
-    
-    const category = pathParts[2]; // album 또는 benefit
-    const albumName = pathParts[3]; // DO IT, HOP, KARMA
-
-    let unicodePart = fileNameParts[fileNameParts.length - 1] 
-        ? fileNameParts[fileNameParts.length - 1].split('.')[0].replace(/[^0-9]/g, "") 
-        : "0";
-
-    return {
-        member: memberMap[fileNameParts[0]] || "기타",
-        album: albumName,
-        version: fileNameParts[2] || "",
-        unicode: unicodePart,
-        category: category,
-        img: path // 이미지 경로
-    };
-}).sort((a, b) => parseInt(b.unicode) - parseInt(a.unicode));
-
-let isGroupedView = false; 
-
-// 2. 렌더링 함수 (이름을 render로 통일)
 function render(filterMember = "전체") {
-    // HTML의 ID와 일치하도록 'poca-container'로 수정
-    const gridContainer = document.getElementById('poca-container'); 
+    // poca-container와 pcGrid 둘 중 하나라도 있으면 잡히도록 수정
+    const gridContainer = document.getElementById('poca-container') || document.getElementById('pcGrid');
+    
     if (!gridContainer) return;
     gridContainer.innerHTML = '';
     
@@ -433,17 +406,8 @@ function render(filterMember = "전체") {
             section.className = 'group-section';
             const [alb, ver] = title.split(' | ');
             section.innerHTML = `<div class="group-title">${alb}<span>|</span>${ver}</div>`;
-            
             const grid = document.createElement('div');
             grid.className = 'grid';
-            
-            pocast.sort((a, b) => {
-                const orderA = memberOrder.indexOf(a.member);
-                const orderB = memberOrder.indexOf(b.member);
-                if (orderA !== orderB) return orderA - orderB;
-                return parseInt(a.unicode) - parseInt(b.unicode);
-            });
-            
             pocast.forEach(poca => grid.appendChild(createCard(poca)));
             section.appendChild(grid);
             gridContainer.appendChild(section);
@@ -452,92 +416,7 @@ function render(filterMember = "전체") {
     updateCounter(filterMember); 
 }
 
-// 3. 카드 생성 함수
-function createCard(poca) {
-    const card = document.createElement('div');
-    card.className = 'poca-card';
-    if (localStorage.getItem(poca.unicode) === 'true') card.classList.add('collected');
-    
-    // 경로에 공백이 있을 경우를 대비해 encodeURI 적용
-    const safeImgPath = encodeURI(poca.img);
-
-    card.innerHTML = `
-        <img src="${safeImgPath}">
-        <div class="poca-label">${poca.member} - ${poca.version}</div>
-    `;
-    
-    card.onclick = () => {
-        card.classList.toggle('collected');
-        localStorage.setItem(poca.unicode, card.classList.contains('collected'));
-        const activeBtn = document.querySelector('#filter-members .active');
-        const currentMember = activeBtn ? activeBtn.innerText : "전체";
-        updateCounter(currentMember);
-    };
-
-    card.oncontextmenu = (e) => {
-        e.preventDefault();
-        const modal = document.getElementById('info-modal');
-        document.getElementById('modal-img').src = safeImgPath;
-        document.getElementById('modal-info').innerHTML = `
-            <div style="line-height: 1.8;">
-                <div style="font-size: 16px; font-weight: bold; color: #111;">${poca.album}</div>
-                <div style="font-size: 14px; color: #444;">${poca.version}</div>
-                <div style="color: #bbb; font-size: 12px; margin-top: 10px;">#${poca.unicode}</div>
-            </div>`;
-        modal.style.display = 'block';
-    };
-    return card;
-}
-
-// 4. 검색 기능 함수
-function searchPoca() {
-    const query = document.getElementById('search-input').value.toLowerCase();
-    const cards = document.querySelectorAll('.poca-card');
-
-    cards.forEach(card => {
-        const label = card.querySelector('.poca-label').innerText.toLowerCase();
-        card.style.display = label.includes(query) ? "" : "none";
-    });
-}
-
-// 5. 초기 실행 및 이벤트 연결
+// 페이지 로드 시 실행되는 명령 이름 확인
 document.addEventListener('DOMContentLoaded', () => {
-    render(); // 이름을 render()로 실행하도록 수정
-    
-    // 보기 모드 전환
-    document.getElementById('view-mode-btn').onclick = function() {
-        isGroupedView = !isGroupedView;
-        this.innerText = isGroupedView ? "전체" : "리스트"; 
-        render(document.querySelector('#filter-members .active').innerText);
-    };
-
-    // 필터 버튼 클릭
-    document.querySelectorAll('#filter-members .filter-btn').forEach(btn => {
-        btn.onclick = () => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            render(btn.innerText);
-        };
-    });
-
-    // 초기화 버튼
-    document.getElementById('reset-btn').onclick = () => {
-        if(confirm("모든 체크를 초기화할까요?")) {
-            pocaData.forEach(p => localStorage.removeItem(p.unicode));
-            render(document.querySelector('#filter-members .active').innerText);
-        }
-    };
+    render(); // 반드시 render() 라고 적혀 있어야 합니다.
 });
-
-// 카운터 및 모달 관련
-function updateCounter(member = "전체") {
-    const filtered = member === "전체" ? pocaData : pocaData.filter(p => p.member === member);
-    const total = filtered.length;
-    const collected = filtered.filter(p => localStorage.getItem(p.unicode) === 'true').length;
-    document.getElementById('collect-count').innerText = collected;
-    document.getElementById('total-count').innerText = total;
-}
-
-const modal = document.getElementById('info-modal');
-document.querySelector('.close-btn').onclick = () => modal.style.display = 'none';
-window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; }
