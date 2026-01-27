@@ -7,24 +7,28 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="header">
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="포카 이름이나 버전 검색..." onkeyup="searchPoca()">
-        </div>
-        
-        <div id="filter-members" class="filter-group">
-            <button class="filter-btn active" onclick="filterByMember('전체')">전체</button>
-            <button class="filter-btn" onclick="filterByMember('방찬')">방찬</button>
-            <button class="filter-btn" onclick="filterByMember('리노')">리노</button>
-            <button class="filter-btn" onclick="filterByMember('창빈')">창빈</button>
-            <button class="filter-btn" onclick="filterByMember('현진')">현진</button>
-            <button class="filter-btn" onclick="filterByMember('한')">한</button>
-            <button class="filter-btn" onclick="filterByMember('필릭스')">필릭스</button>
-            <button class="filter-btn" onclick="filterByMember('승민')">승민</button>
-            <button class="filter-btn" onclick="filterByMember('아이엔')">아이엔</button>
-            <button class="filter-btn" onclick="filterByMember('단체')">단체</button>
+   <div class="header">
+    <div class="top-row">
+        <input type="text" id="search-input" placeholder="앨범명이나 버전 검색...">
+        <div class="data-btns">
+            <button id="export-btn" title="데이터 백업">백업</button>
+            <button id="import-btn" title="데이터 불러오기">불러오기</button>
         </div>
     </div>
+    
+    <div id="filter-members" class="filter-group">
+        <button class="filter-btn active">전체</button>
+        <button class="filter-btn">방찬</button>
+        <button class="filter-btn">리노</button>
+        <button class="filter-btn">창빈</button>
+        <button class="filter-btn">현진</button>
+        <button class="filter-btn">한</button>
+        <button class="filter-btn">필릭스</button>
+        <button class="filter-btn">승민</button>
+        <button class="filter-btn">아이엔</button>
+        <button class="filter-btn">단체</button>
+    </div>
+</div>
 
     <div id="poca-container" class="grid"></div>
 
@@ -39,9 +43,6 @@
             </div>
         </div>
        <div class="footer-right">
-            <button id="export-btn" title="데이터 내보내기">백업</button>
-            <button id="import-btn" title="데이터 가져오기">불러오기</button>
-        </div>
     </div>
 
 <div id="info-modal" class="modal" style="display:none;">
