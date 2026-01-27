@@ -390,6 +390,23 @@ const rawPaths = [
   "./images/benefit/KARMA/SKZ_KARMA_POP-UP ALBUM SET PURCHASE 1ST_25081311.jpg"
 ];
 
+// pocaData 정의 (render 함수보다 무조건 위에 있어야 함)
+const pocaData = rawPaths.map(path => {
+    const pathParts = path.split('/');
+    const fileName = pathParts[pathParts.length - 1];
+    const fileNameParts = fileName.split('_');
+    const albumName = pathParts[3] || "ALBUM";
+    let unicodePart = fileNameParts[fileNameParts.length - 1] ? fileNameParts[fileNameParts.length - 1].split('.')[0].replace(/[^0-9]/g, "") : "0";
+
+    return {
+        member: memberMap[fileNameParts[0]] || "기타",
+        album: albumName,
+        version: fileNameParts[2] || "",
+        unicode: unicodePart,
+        img: path
+    };
+}).sort((a, b) => parseInt(b.unicode) - parseInt(a.unicode));
+
 function render(filterMember = "전체") {
     // poca-container와 pcGrid 둘 중 하나라도 있으면 잡히도록 수정
     const gridContainer = document.getElementById('poca-container') || document.getElementById('pcGrid');
