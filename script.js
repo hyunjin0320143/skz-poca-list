@@ -277,20 +277,25 @@ const pocaData = rawPaths.map(path => {
 // 4. 화면에 포카 목록을 그리는 함수
 function render(filterMember = "전체") {
     const gridContainer = document.getElementById('poca-container') || document.getElementById('pcGrid');
+    const searchInput = document.getElementById('search-input'); // 검색창 ID 확인
     if (!gridContainer) return;
-    gridContainer.innerHTML = '';
     
-    const filtered = filterMember === "전체" ? pocaData : pocaData.filter(p => p.member === filterMember);
+    gridContainer.innerHTML = '';
+    const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
+
+    // 1. 멤버 필터링 + 2. 검색어 필터링 (앨범명이나 버전명에 검색어가 포함되었는지 확인)
+    let filtered = pocaData.filter(p => {
+        const matchesMember = (filterMember === "전체" || p.member === filterMember);
+        const matchesSearch = p.album.toLowerCase().includes(searchTerm) || 
+                              p.version.toLowerCase().includes(searchTerm);
+        return matchesMember && matchesSearch;
+    });
 
     if (!isGroupedView) {
-        // [전체 보기 모드] - 컨테이너 자체가 그리드가 되어 가로로 정렬
         gridContainer.className = 'grid'; 
         filtered.forEach(poca => gridContainer.appendChild(createCard(poca)));
     } else {
-        // [리스트(그룹) 보기 모드] 
-        // 메인 컨테이너에서 'grid'를 빼야 앨범 제목들이 세로로 나열됩니다.
         gridContainer.className = 'list-mode-active'; 
-
         const groups = {};
         filtered.forEach(p => {
             const key = `${p.album} | ${p.version}`;
@@ -302,12 +307,9 @@ function render(filterMember = "전체") {
             const section = document.createElement('div');
             section.className = 'group-section';
             section.innerHTML = `<div class="group-title">${title}</div>`;
-            
-            // 핵심: 포카들을 담는 이 작은 박스만 'grid' 클래스를 가집니다.
             const subGrid = document.createElement('div');
-            subGrid.className = 'grid'; // 여기서 가로 정렬이 결정됩니다!
+            subGrid.className = 'grid';
             
-            // 멤버 순서 정렬 (방찬 우선)
             pocast.sort((a, b) => {
                 let indexA = memberOrder.indexOf(a.member);
                 let indexB = memberOrder.indexOf(b.member);
@@ -315,13 +317,13 @@ function render(filterMember = "전체") {
                 if (indexB === -1) indexB = 99;
                 return indexA - indexB;
             });
-            
+
             pocast.forEach(poca => subGrid.appendChild(createCard(poca)));
             section.appendChild(subGrid);
             gridContainer.appendChild(section);
         }
     }
-    updateCounter(filterMember); 
+    updateCounter(filterMember, searchTerm); 
 }
 
 // 5. 카드 한 장 만드는 함수
@@ -406,11 +408,32 @@ document.addEventListener('DOMContentLoaded', () => {
     window.onclick = (e) => {
         if (e.target === modal) { modal.style.display = 'none'; }
     };
-});
-// 7. 카운터 업데이트 함수
-function updateCounter(member = "전체") {
-    const filtered = member === "전체" ? pocaData : pocaData.filter(p => p.member === member);
+const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.oninput = () => {
+            // 현재 어떤 멤버 버튼이 활성화(active) 되어 있는지 찾습니다.
+            const activeBtn = document.querySelector('#filter-members .filter-btn.active');
+            // 버튼이 눌려있으면 그 이름(예: 방찬)을 쓰고, 없으면 "전체"를 사용합니다.
+            const currentMember = activeBtn ? activeBtn.innerText : "전체";
+            
+            // 검색어에 맞춰 다시 그리기!
+            render(currentMember);
+        };
+    }
+}); // <-- 여기서 DOMContentLoaded가 끝납니다.
+
+// 7. 카운터 업데이트 함수 (검색 결과까지 반영)
+function updateCounter(member = "전체", searchTerm = "") {
+    // 멤버 필터 + 검색어 필터를 동일하게 적용
+    const filtered = pocaData.filter(p => {
+        const matchesMember = (member === "전체" || p.member === member);
+        const matchesSearch = p.album.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                              p.version.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesMember && matchesSearch;
+    });
+
     const collected = filtered.filter(p => localStorage.getItem(p.unicode) === 'true').length;
+    
     if(document.getElementById('collect-count')) document.getElementById('collect-count').innerText = collected;
     if(document.getElementById('total-count')) document.getElementById('total-count').innerText = filtered.length;
 }
