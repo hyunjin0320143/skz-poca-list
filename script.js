@@ -1120,12 +1120,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const modal = document.getElementById('info-modal');
     const closeBtn = document.querySelector('.close-btn');
-    if (closeBtn && modal) {
-        closeBtn.onclick = () => { modal.style.display = 'none'; };
-    }
-    window.onclick = (e) => {
-        if (e.target === modal) { modal.style.display = 'none'; }
-    };
 const searchInput = document.getElementById('search-input');
     if (searchInput) {
         searchInput.oninput = () => {
@@ -1201,13 +1195,32 @@ function updateCounter(member = "전체", searchTerm = "") {
     if(document.getElementById('total-count')) document.getElementById('total-count').innerText = filtered.length;
 }
 
-// 정보창(모달) 요소를 가져옵니다.
+// 1. 모달 요소 가져오기
 const infoModal = document.getElementById('info-modal');
 
-// 화면 어디든 클릭했을 때 실행되는 함수
-window.addEventListener('click', function(event) {
-    // 만약 클릭한 곳이 '모달 배경(info-modal)'이라면?
-    if (event.target === infoModal) {
-        infoModal.style.display = 'none'; // 창을 닫습니다.
-    }
+// 2. 정보창 내부나 외부 어디든 클릭하면 닫기
+infoModal.addEventListener('click', function() {
+    infoModal.style.display = 'none';
 });
+
+// 3. 우클릭 시 창이 바로 닫히지 않도록 방어 (기존 코드 수정)
+// createCard 함수 안의 card.oncontextmenu 부분을 아래처럼 수정하세요.
+card.oncontextmenu = (e) => {
+    e.preventDefault();
+    e.stopPropagation(); // ★ 이 줄이 핵심입니다! (이벤트가 위로 퍼지는 걸 막음)
+    
+    const modal = document.getElementById('info-modal');
+    const modalImg = document.getElementById('modal-img');
+    const modalInfo = document.getElementById('modal-info');
+
+    if (modal) {
+        modalImg.src = safeImgPath;
+        modalInfo.innerHTML = `
+            <div style="line-height: 1.5; text-align: left; padding: 0 10px;">
+                <strong style="color: #333; font-size: 1.1em;">${poca.album}</strong><br>
+                <span style="color: #666; font-size: 0.9em;">${poca.version}</span><br>
+                <small style="color: #ccc; display: block; margin-top: 5px;">#${poca.unicode}</small>
+            </div>`;
+        modal.style.display = 'flex';
+    }
+};
