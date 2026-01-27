@@ -138,3 +138,38 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
         margin-bottom: 20px !important;
     }
 }
+
+/* --- 데이터 연동 버튼 스타일 --- */
+.footer-right {
+    display: flex;
+    gap: 5px;
+    justify-content: flex-end; /* 오른쪽 끝으로 정렬 */
+    align-items: center;
+}
+
+#export-btn, #import-btn {
+    padding: 6px 10px;
+    font-size: 11px; /* 작은 텍스트로 세련되게 */
+    background: #ffffff;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap; /* 글자가 줄바꿈되지 않게 */
+}
+
+/* 마우스를 올렸을 때 살짝 진해지는 효과 */
+#export-btn:hover, #import-btn:hover {
+    background: #f8f9fa;
+    border-color: #ccc;
+    color: #333;
+}
+
+/* 모바일 화면에서 버튼들이 너무 커 보이지 않도록 조정 */
+@media (max-width: 600px) {
+    #export-btn, #import-btn {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+}
