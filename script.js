@@ -280,16 +280,17 @@ function render(filterMember = "전체") {
     if (!gridContainer) return;
     gridContainer.innerHTML = '';
     
-    // 기본적으로 grid 클래스를 부여
-    gridContainer.className = 'grid'; 
-    
     const filtered = filterMember === "전체" ? pocaData : pocaData.filter(p => p.member === filterMember);
 
     if (!isGroupedView) {
-        // [전체 보기 모드]
+        // [전체 보기 모드] - 컨테이너 자체가 그리드가 되어 가로로 정렬
+        gridContainer.className = 'grid'; 
         filtered.forEach(poca => gridContainer.appendChild(createCard(poca)));
     } else {
-        // [리스트(그룹) 보기 모드]
+        // [리스트(그룹) 보기 모드] 
+        // 메인 컨테이너에서 'grid'를 빼야 앨범 제목들이 세로로 나열됩니다.
+        gridContainer.className = 'list-mode-active'; 
+
         const groups = {};
         filtered.forEach(p => {
             const key = `${p.album} | ${p.version}`;
@@ -302,10 +303,11 @@ function render(filterMember = "전체") {
             section.className = 'group-section';
             section.innerHTML = `<div class="group-title">${title}</div>`;
             
+            // 핵심: 포카들을 담는 이 작은 박스만 'grid' 클래스를 가집니다.
             const subGrid = document.createElement('div');
-            subGrid.className = 'grid'; 
+            subGrid.className = 'grid'; // 여기서 가로 정렬이 결정됩니다!
             
-            // 그룹 내 멤버 정렬
+            // 멤버 순서 정렬 (방찬 우선)
             pocast.sort((a, b) => {
                 let indexA = memberOrder.indexOf(a.member);
                 let indexB = memberOrder.indexOf(b.member);
