@@ -113,8 +113,10 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 }
 
 /* 1. 바구니 스타일: 가로로 꽉 차게 정렬 */
+/* 1. 바구니 스타일: 가로로 꽉 차게 정렬 */
 #poca-container, #pcGrid, .grid {
     display: grid !important;
+    /* PC: 최소 130px 유지 */
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
     gap: 15px !important;
     padding: 20px;
@@ -122,13 +124,15 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
     margin: 0 auto;
 }
 
-/* 2. 개별 포카 카드 (글자를 이미지 위로 올리는 기준점) */
+/* 2. 개별 포카 카드 (고정 너비 삭제) */
 .poca-card {
-    width: 130px;
-    position: relative; /* 중요: 이걸 해야 라벨이 사진 안으로 들어감 */
+    /* width: 130px; 를 지우고 100%로 변경했습니다. */
+    width: 100%; 
+    max-width: 150px; /* PC에서 너무 커지는 것만 방지 */
+    position: relative;
     cursor: pointer;
     transition: transform 0.2s;
-    margin-bottom: 10px;
+    margin: 0 auto 10px;
 }
 
 .poca-card:hover {
@@ -146,26 +150,26 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 /* 3. 이미지 위 왼쪽 하단 라벨 */
 .poca-label {
     position: absolute;
-    bottom: 0px;    /* 바닥에 완전히 밀착 */
-    left: 0px;      /* 왼쪽에 완전히 밀착 */
-    padding: 5px;   /* 이미지 테두리에서 살짝만 떨어뜨리기 위해 안쪽 여백 설정 */
-    background: none !important; /* 혹시 모를 배경 띠 제거 */
-    border: none !important;     /* 혹시 모를 테두리 제거 */
+    bottom: 0px;
+    left: 0px;
+    padding: 5px;
+    background: none !important;
+    border: none !important;
     pointer-events: none;
     z-index: 5;
 }
 
-/* 4. 폴더명(카테고리) 디자인: 반투명 검정 배경 + 흰색 글씨 */
+/* 4. 폴더명(카테고리) 디자인 */
 .poca-category {
     font-size: 10px;
     color: #ffffff;
-    background-color: rgba(0, 0, 0, 0.5); /* 글자 배경만 남김 */
-    padding: 2px 5px; /* 배경 상자가 글자에 더 밀착되게 조절 */
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 2px 5px;
     border-radius: 4px;
-    display: block; /* 한 줄을 차지하게 하여 띠처럼 보이는 현상 방지 */
-    width: fit-content; /* 글자 너비만큼만 배경 생성 */
+    display: block;
+    width: fit-content;
     font-weight: 500;
-    line-height: 1; /* 글자 높이 최적화 */
+    line-height: 1;
 }
 
 /* 5. 수집 안 된 포카 흐리게 */
@@ -198,23 +202,41 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
     width: 100%;
     height: auto;
     border-radius: 12px;
+    margin-bottom: 20px;
+}
 
-/* 모바일용 레이아웃 (화면 너비가 600px 이하일 때) */
+#modal-info {
+    text-align: left;
+    padding: 0 5px;
+    font-size: 15px;
+    color: #333;
+    line-height: 1.8;
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px; right: 20px;
+    font-size: 28px;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* 7. 모바일용 레이아웃 (한 줄에 4개 보장) */
 @media (max-width: 600px) {
     #poca-container, #pcGrid, .grid {
-        /* 한 줄에 4개가 들어가도록 최소 크기를 80px 정도로 조정 */
-        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)) !important;
-        gap: 8px !important; /* 모바일에서는 간격을 조금 더 좁게 */
+        /* 한 줄에 4개가 뜰 수 있도록 최소폭을 75px로 조정 */
+        grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)) !important;
+        gap: 8px !important;
         padding: 10px;
     }
 
     .poca-card {
-        width: 100%; /* 그리드 칸 너비에 맞게 자동 조절 */
+        max-width: 100%; /* 모바일 칸 너비에 맞춤 */
     }
 
-    /* 모바일에서는 글자 크기를 아주 조금 더 줄여서 깔끔하게 */
     .poca-category {
         font-size: 8px;
-        padding: 2px 4px;
+        padding: 1px 4px;
     }
 }
