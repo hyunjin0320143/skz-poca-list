@@ -1,4 +1,4 @@
-// 1. 기초 설정 (중복 선언 방지를 위해 맨 위에 한 번만!)
+// 1. 기초 설정 (맨 위에 한 번만!)
 const memberMap = { 
     "BANG": "방찬", "KNOW": "리노", "BIN": "창빈", "HYUN": "현진", 
     "HAN": "한", "LIX": "필릭스", "MIN": "승민", "IN": "아이엔", "SKZ": "단체" 
@@ -6,9 +6,7 @@ const memberMap = {
 const memberOrder = ["방찬", "리노", "창빈", "현진", "한", "필릭스", "승민", "아이엔", "단체", "기타"];
 let isGroupedView = false; 
 
-// --- 이 아래에 기존의 rawPaths 리스트가 오도록 하세요 ---
-
-// 전체 파일 경로 리스트 (DO IT + KARMA 추가)
+// 2. 이미지 경로 리스트 (이 부분의 따옴표 안에 경로를 채우세요)
 const rawPaths = [
   // === ALBUM / DO IT ===
   "./images/album/DO IT/BANG_DOIT_ACCORDIONver PHOTOCARD_25110701.jpg",
@@ -389,9 +387,7 @@ const rawPaths = [
   "./images/benefit/KARMA/SKZ_KARMA_POP-UP ALBUM SET PURCHASE 1ST_25081311.jpg"
 ];
 
-// --- rawPaths가 끝나는 ]; 바로 다음 줄부터 아래를 붙여넣으세요 ---
-
-// 2. 데이터 가공 (pocaData 생성)
+// 3. 데이터 가공 (pocaData 생성)
 const pocaData = rawPaths.map(path => {
     const pathParts = path.split('/');
     const fileName = pathParts[pathParts.length - 1];
@@ -410,39 +406,7 @@ const pocaData = rawPaths.map(path => {
     };
 }).sort((a, b) => parseInt(b.unicode) - parseInt(a.unicode));
 
-// 3. 카드 제작 함수
-function createCard(poca) {
-    const card = document.createElement('div');
-    card.className = 'poca-card';
-    if (localStorage.getItem(poca.unicode) === 'true') card.classList.add('collected');
-    
-    const safeImgPath = encodeURI(poca.img);
-    card.innerHTML = `
-        <img src="${safeImgPath}">
-        <div class="poca-label">${poca.member} - ${poca.version}</div>
-    `;
-    
-    card.onclick = () => {
-        card.classList.toggle('collected');
-        localStorage.setItem(poca.unicode, card.classList.contains('collected'));
-        const activeBtn = document.querySelector('#filter-members .active');
-        updateCounter(activeBtn ? activeBtn.innerText : "전체");
-    };
-
-    card.oncontextmenu = (e) => {
-        e.preventDefault();
-        const modal = document.getElementById('info-modal');
-        document.getElementById('modal-img').src = safeImgPath;
-        document.getElementById('modal-info').innerHTML = `
-            <div style="line-height: 1.8;">
-                <b>${poca.album}</b><br>${poca.version}<br><small>#${poca.unicode}</small>
-            </div>`;
-        modal.style.display = 'block';
-    };
-    return card;
-}
-
-// 4. 화면 렌더링 함수
+// 4. 화면을 그려주는 함수 (render)
 function render(filterMember = "전체") {
     const gridContainer = document.getElementById('poca-container') || document.getElementById('pcGrid');
     if (!gridContainer) return;
@@ -477,25 +441,41 @@ function render(filterMember = "전체") {
     updateCounter(filterMember); 
 }
 
-// 5. 검색 및 이벤트 설정
-function searchPoca() {
-    const query = document.getElementById('search-input').value.toLowerCase();
-    const cards = document.querySelectorAll('.poca-card');
-    cards.forEach(card => {
-        const label = card.querySelector('.poca-label').innerText.toLowerCase();
-        card.style.display = label.includes(query) ? "" : "none";
-    });
+// 5. 카드 한 장 만드는 함수
+function createCard(poca) {
+    const card = document.createElement('div');
+    card.className = 'poca-card';
+    if (localStorage.getItem(poca.unicode) === 'true') card.classList.add('collected');
+    
+    const safeImgPath = encodeURI(poca.img);
+    card.innerHTML = `
+        <img src="${safeImgPath}">
+        <div class="poca-label">${poca.member} - ${poca.version}</div>
+    `;
+    
+    card.onclick = () => {
+        card.classList.toggle('collected');
+        localStorage.setItem(poca.unicode, card.classList.contains('collected'));
+        const activeBtn = document.querySelector('#filter-members .active');
+        updateCounter(activeBtn ? activeBtn.innerText : "전체");
+    };
+
+    return card;
 }
 
+// 6. 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', () => {
     render();
     
-    document.getElementById('view-mode-btn').onclick = function() {
-        isGroupedView = !isGroupedView;
-        this.innerText = isGroupedView ? "전체" : "리스트"; 
-        const activeBtn = document.querySelector('#filter-members .active');
-        render(activeBtn ? activeBtn.innerText : "전체");
-    };
+    // 버튼 연결
+    if(document.getElementById('view-mode-btn')) {
+        document.getElementById('view-mode-btn').onclick = function() {
+            isGroupedView = !isGroupedView;
+            this.innerText = isGroupedView ? "전체" : "리스트"; 
+            const activeBtn = document.querySelector('#filter-members .active');
+            render(activeBtn ? activeBtn.innerText : "전체");
+        };
+    }
 
     document.querySelectorAll('#filter-members .filter-btn').forEach(btn => {
         btn.onclick = () => {
@@ -504,22 +484,11 @@ document.addEventListener('DOMContentLoaded', () => {
             render(btn.innerText);
         };
     });
-
-    document.getElementById('reset-btn').onclick = () => {
-        if(confirm("모든 데이터를 초기화할까요?")) {
-            pocaData.forEach(p => localStorage.removeItem(p.unicode));
-            location.reload();
-        }
-    };
 });
 
 function updateCounter(member = "전체") {
     const filtered = member === "전체" ? pocaData : pocaData.filter(p => p.member === member);
     const collected = filtered.filter(p => localStorage.getItem(p.unicode) === 'true').length;
-    document.getElementById('collect-count').innerText = collected;
-    document.getElementById('total-count').innerText = filtered.length;
+    if(document.getElementById('collect-count')) document.getElementById('collect-count').innerText = collected;
+    if(document.getElementById('total-count')) document.getElementById('total-count').innerText = filtered.length;
 }
-
-const modal = document.getElementById('info-modal');
-if(document.querySelector('.close-btn')) document.querySelector('.close-btn').onclick = () => modal.style.display = 'none';
-window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; }
