@@ -492,6 +492,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// 7. 리셋 버튼 및 모달 닫기 설정
+    const resetBtn = document.getElementById('reset-btn');
+    if (resetBtn) {
+        resetBtn.onclick = () => {
+            if (confirm("모든 수집 데이터를 초기화할까요?")) {
+                pocaData.forEach(p => localStorage.removeItem(p.unicode));
+                location.reload();
+            }
+        };
+    }
+
+    // 모달 닫기 기능 (X 버튼 클릭 시)
+    const modal = document.getElementById('info-modal');
+    const closeBtn = document.querySelector('.close-btn');
+    
+    if (closeBtn && modal) {
+        closeBtn.onclick = () => {
+            modal.style.display = 'none';
+        };
+    }
+
+    // 모달 바깥 어두운 배경 클릭 시 닫기
+    window.onclick = (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
 function updateCounter(member = "전체") {
     const filtered = member === "전체" ? pocaData : pocaData.filter(p => p.member === member);
     const collected = filtered.filter(p => localStorage.getItem(p.unicode) === 'true').length;
