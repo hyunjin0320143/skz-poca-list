@@ -76,3 +76,30 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 .modal-content img { width: 100%; border-radius: 12px; display: block; margin-bottom: 15px; }
 .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #333; z-index: 10; }
 #modal-info { padding: 0 10px; text-align: left; line-height: 1.6; }
+
+/* 7. 모바일용 레이아웃 (한 줄에 4개 보장) */
+@media (max-width: 600px) {
+    /* 전체 리스트와 그룹화된 리스트 모두에 적용 */
+    #poca-container, #pcGrid, .grid, .group-section .grid {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)) !important;
+        gap: 8px !important;
+        padding: 10px 0; /* 좌우 여백 조절 */
+    }
+
+    /* 그룹 제목 스타일 살짝 조정 */
+    .group-title {
+        font-size: 14px;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+
+    .poca-card {
+        max-width: 100%; 
+    }
+
+    .poca-category {
+        font-size: 8px;
+        padding: 1px 4px;
+    }
+}
