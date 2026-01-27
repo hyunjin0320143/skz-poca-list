@@ -77,22 +77,26 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #333; z-index: 10; }
 #modal-info { padding: 0 10px; text-align: left; line-height: 1.6; }
 
-/* 7. 모바일용 레이아웃 (그룹 모드에서도 가로 4장 보장) */
+/* 7. 모바일용 레이아웃 (가로 4장 최종 보강형) */
 @media (max-width: 600px) {
-    #poca-container, #pcGrid, .grid, .group-section .grid {
+    #poca-container, 
+    #pcGrid, 
+    .grid, 
+    .group-section .grid, 
+    .list-mode-container .grid {  /* <-- 이 부분을 추가하면 더 확실합니다 */
         display: grid !important;
-        /* 한 줄에 4개가 나오도록 최소폭 조절 */
         grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)) !important;
         gap: 8px !important;
         padding: 10px 0;
     }
 
     .group-section {
-        padding: 0 10px; /* 그룹 간격 최적화 */
+        padding: 0 10px;
     }
 
     .group-title {
         font-size: 14px;
         margin-top: 25px;
+        text-align: left; /* 제목은 왼쪽 정렬 */
     }
 }
