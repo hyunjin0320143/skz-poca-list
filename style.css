@@ -208,22 +208,24 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
     color: #000;
 }
 
-/* 포카 하단 라벨 영역 */
+/* 포카 하단 라벨 영역 (이미지와 간격 밀착) */
 .poca-label {
-    margin-top: 6px;
+    margin-top: 0px; /* 숫자를 더 줄여서 이미지와 거의 붙게 만들었습니다 */
     text-align: center;
 }
 
-/* 카테고리 텍스트 스타일: 배경 제거 */
+/* 카테고리 텍스트 스타일: 배경 없고 흰색 글씨 */
 .poca-category {
     font-size: 11px;
-    color: #a0a0a0; /* 부드러운 회색 */
+    color: #ffffff; /* 회색에서 흰색으로 변경 */
     display: inline-block;
     letter-spacing: 0.01em;
     font-weight: 400;
+    opacity: 0.9; /* 배경이 아주 밝을 경우를 대비해 살짝 투명도를 주면 더 고급스럽습니다 */
 }
 
-/* 수집된 경우 글자색만 살짝 변경 (선택사항) */
+/* 수집된 경우에도 흰색 유지 */
 .collected .poca-category {
-    color: #777;
+    color: #ffffff;
+    opacity: 1;
 }
