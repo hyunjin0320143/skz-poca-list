@@ -69,30 +69,35 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 .counter-pill { background: #333; color: white; padding: 10px 20px; border-radius: 25px; font-weight: bold; display: flex; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
 #reset-btn { margin-left: 15px; background: #ff4d4d; color: white; border: none; border-radius: 8px; padding: 3px 8px; cursor: pointer; font-size: 10px; font-weight: bold; }
 
-/* 우클릭 정보 모달 */
+/* 우클릭 정보 모달 - 이 코드로 덮어쓰세요 */
 .modal { 
     display: none; 
     position: fixed; 
-    z-index: 10000; /* 매우 높은 숫자 */
+    z-index: 10000; 
     left: 0;
     top: 0;
-    width: 100vw;  /* 반드시 vw */
-    height: 100vh; /* 반드시 vh */
+    width: 100vw;  
+    height: 100vh; 
     background: rgba(0,0,0,0.7); 
+    display: none; /* JS에서 flex로 바꿀 예정 */
     align-items: center; 
     justify-content: center;
+    /* 추가: 모달이 화면을 가로막고 클릭을 직접 받도록 설정 */
+    pointer-events: auto; 
 }
 
 .modal-content { 
     position: relative; 
-    z-index: 100000; /* 하얀 박스는 배경보다 더 위에 */
+    z-index: 10001; 
     background: white; 
     padding: 20px; 
     width: 85%; 
     max-width: 300px; 
     border-radius: 20px; 
     text-align: center; 
-    cursor: default; /* 박스 안에서는 기본 커서 */
+    cursor: default;
+    /* 추가: 클릭 시 닫기 신호가 뒤로 새지 않게 함 */
+    pointer-events: auto; 
 }
 
 .modal-content img { 

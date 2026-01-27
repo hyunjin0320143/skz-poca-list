@@ -1192,3 +1192,20 @@ function updateCounter(member = "전체", searchTerm = "") {
     if(document.getElementById('collect-count')) document.getElementById('collect-count').innerText = collected;
     if(document.getElementById('total-count')) document.getElementById('total-count').innerText = filtered.length;
 }
+
+// [최종 해결] 어떤 상황에서도 정보창 닫기
+const finalModal = document.getElementById('info-modal');
+
+if (finalModal) {
+    // 1. 모달(배경+이미지 전체)에 클릭 이벤트 추가
+    finalModal.addEventListener('click', function(e) {
+        // 창을 즉시 숨깁니다.
+        finalModal.style.display = 'none';
+        
+        // 2. ★ 핵심 ★ 클릭 신호가 뒤로 새어나가지 않게 '물리적'으로 차단
+        e.stopPropagation(); // 뒤에 있는 포카가 클릭되는 걸 막음
+        e.preventDefault();  // 브라우저의 기본 동작 막음
+        
+        console.log("정보창 강제 종료 성공");
+    }, true); // 'true'는 다른 클릭들보다 이 코드를 가장 먼저 실행하라는 뜻입니다.
+}
