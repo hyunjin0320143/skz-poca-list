@@ -112,28 +112,9 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
     justify-items: center;
 }
 
-/* 개별 카드 스타일 */
-.poca-card {
-    width: 120px;
-    cursor: pointer;
-    transition: transform 0.2s;
-    text-align: center;
-}
-
-.poca-card img {
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-
-/* 수집 안 된 포카는 흐리게 (선택사항) */
-.poca-card:URI:not(.collected) img {
-    filter: grayscale(100%) opacity(0.5);
-}
-
-/* 바구니 스타일: 가로로 꽉 차게 정렬 */
+/* 1. 바구니 스타일: 가로로 꽉 차게 정렬 */
 #poca-container, #pcGrid, .grid {
-    display: grid !important; /* 강제로 그리드 적용 */
+    display: grid !important;
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
     gap: 15px !important;
     padding: 20px;
@@ -141,91 +122,73 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
     margin: 0 auto;
 }
 
-/* 개별 카드 크기 고정 */
+/* 2. 개별 포카 카드 (글자를 이미지 위로 올리는 기준점) */
 .poca-card {
     width: 130px;
+    position: relative; /* 중요: 이걸 해야 라벨이 사진 안으로 들어감 */
+    cursor: pointer;
+    transition: transform 0.2s;
     margin-bottom: 10px;
+}
+
+.poca-card:hover {
+    transform: translateY(-5px);
 }
 
 .poca-card img {
     width: 100%;
     height: auto;
-    border-radius: 8px;
+    border-radius: 12px;
     display: block;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* 배경 및 중앙 정렬 */
+/* 3. 이미지 위 왼쪽 하단 라벨 */
+.poca-label {
+    position: absolute; /* 사진 위에 띄우기 */
+    bottom: 8px;       /* 하단에서 8px 띄움 */
+    left: 8px;         /* 왼쪽에서 8px 띄움 */
+    pointer-events: none; /* 클릭 방해 금지 */
+}
+
+/* 4. 폴더명(카테고리) 디자인: 반투명 검정 배경 + 흰색 글씨 */
+.poca-category {
+    font-size: 10px;
+    color: #ffffff;
+    background-color: rgba(0, 0, 0, 0.5); /* 검정 반투명 배경 */
+    padding: 3px 7px;
+    border-radius: 6px;
+    display: inline-block;
+    font-weight: 500;
+}
+
+/* 5. 수집 안 된 포카 흐리게 */
+.poca-card:not(.collected) img {
+    filter: grayscale(100%) opacity(0.5);
+}
+
+/* 6. 우클릭 상세 정보 모달 스타일 */
 .modal {
     display: none; 
     position: fixed; 
     z-index: 9999; 
-    left: 0; top: 0; 
-    width: 100%; height: 100%; 
-    background-color: rgba(0,0,0,0.7); /* 배경 밝기 살짝 조절 */
+    left: 0; top: 0; width: 100%; height: 100%; 
+    background-color: rgba(0,0,0,0.7);
     justify-content: center;
     align-items: center;
 }
 
-/* 흰색 카드 상자 (너비 고정 및 패딩 조절) */
 .modal-content {
     background-color: white;
-    padding: 25px; /* 안쪽 여백을 줘서 더 깔끔하게 */
-    border-radius: 20px; /* 좀 더 부드러운 모서리 */
-    width: 320px; /* 포카 이미지 비율에 딱 예쁜 너비 */
+    padding: 25px;
+    border-radius: 20px;
+    width: 320px;
     text-align: center;
     position: relative;
     box-shadow: 0 15px 35px rgba(0,0,0,0.2);
 }
 
-/* 이미지 스타일 (비율 고정) */
 #modal-img {
-    width: 100%; /* 상자 너비에 맞게 */
-    height: auto; /* 비율 유지하며 높이 자동 조절 */
+    width: 100%;
+    height: auto;
     border-radius: 12px;
-    margin-bottom: 20px; /* 이미지와 텍스트 사이 간격 */
-}
-
-/* 하단 정보 텍스트 정렬 */
-#modal-info {
-    text-align: left; /* 예시 이미지처럼 왼쪽 정렬 */
-    padding: 0 5px;
-    font-size: 15px;
-    color: #333;
-    line-height: 1.8;
-}
-
-/* 닫기 버튼 스타일 */
-.close-btn {
-    position: absolute;
-    top: 15px; right: 20px;
-    font-size: 28px;
-    color: #999;
-    cursor: pointer;
-    line-height: 1;
-}
-
-.close-btn:hover {
-    color: #000;
-}
-
-/* 포카 하단 라벨 영역 (이미지와 간격 밀착) */
-.poca-label {
-    margin-top: 0px; /* 숫자를 더 줄여서 이미지와 거의 붙게 만들었습니다 */
-    text-align: center;
-}
-
-/* 카테고리 텍스트 스타일: 배경 없고 흰색 글씨 */
-.poca-category {
-    font-size: 11px;
-    color: #ffffff; /* 회색에서 흰색으로 변경 */
-    display: inline-block;
-    letter-spacing: 0.01em;
-    font-weight: 400;
-    opacity: 0.9; /* 배경이 아주 밝을 경우를 대비해 살짝 투명도를 주면 더 고급스럽습니다 */
-}
-
-/* 수집된 경우에도 흰색 유지 */
-.collected .poca-category {
-    color: #ffffff;
-    opacity: 1;
-}
