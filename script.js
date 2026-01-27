@@ -274,14 +274,13 @@ const pocaData = rawPaths.map(path => {
     };
 }).sort((a, b) => parseInt(b.unicode) - parseInt(a.unicode));
 
-// 4. 화면을 그려주는 함수 (render)
+// 4. 화면에 포카 목록을 그리는 함수
 function render(filterMember = "전체") {
-    function render(filterMember = "전체") {
     const gridContainer = document.getElementById('poca-container') || document.getElementById('pcGrid');
     if (!gridContainer) return;
     gridContainer.innerHTML = '';
     
-    // [중요] 리스트 모드든 전체 모드든 일단 'grid' 클래스는 유지합니다.
+    // 기본적으로 grid 클래스를 부여
     gridContainer.className = 'grid'; 
     
     const filtered = filterMember === "전체" ? pocaData : pocaData.filter(p => p.member === filterMember);
@@ -291,10 +290,6 @@ function render(filterMember = "전체") {
         filtered.forEach(poca => gridContainer.appendChild(createCard(poca)));
     } else {
         // [리스트(그룹) 보기 모드]
-        // 부모가 grid이면 제목까지 가로로 정렬될 수 있으므로, 
-        // 리스트 모드 전용 클래스를 '추가'만 합니다.
-        gridContainer.classList.add('list-mode-active'); 
-
         const groups = {};
         filtered.forEach(p => {
             const key = `${p.album} | ${p.version}`;
@@ -308,9 +303,9 @@ function render(filterMember = "전체") {
             section.innerHTML = `<div class="group-title">${title}</div>`;
             
             const subGrid = document.createElement('div');
-            // 여기서 클래스를 'grid'로 확실히 박아줍니다.
             subGrid.className = 'grid'; 
             
+            // 그룹 내 멤버 정렬
             pocast.sort((a, b) => {
                 let indexA = memberOrder.indexOf(a.member);
                 let indexB = memberOrder.indexOf(b.member);
@@ -327,7 +322,7 @@ function render(filterMember = "전체") {
     updateCounter(filterMember); 
 }
 
-// 5. 카드 한 장 만드는 함수 (우클릭 모달 포함)
+// 5. 카드 한 장 만드는 함수
 function createCard(poca) {
     const card = document.createElement('div');
     card.className = 'poca-card';
@@ -335,7 +330,6 @@ function createCard(poca) {
     
     const safeImgPath = encodeURI(poca.img);
     
-    // 포카 하단 디자인 설정
     card.innerHTML = `
         <img src="${safeImgPath}">
         <div class="poca-label">${poca.category.toLowerCase()}</div>
@@ -348,7 +342,6 @@ function createCard(poca) {
         updateCounter(activeBtn ? activeBtn.innerText : "전체");
     };
 
-    // 우클릭 상세 정보
     card.oncontextmenu = (e) => {
         e.preventDefault();
         const modal = document.getElementById('info-modal');
@@ -369,13 +362,12 @@ function createCard(poca) {
     };
 
     return card;
-} // <--- 여기에 } 가 빠져서 에러가 났던 거예요!
+}
 
-// 6. 페이지 로드 시 초기화 및 모든 버튼/모달 설정
+// 6. 페이지 로드 시 초기화 및 모든 버튼 설정
 document.addEventListener('DOMContentLoaded', () => {
     render();
     
-    // 뷰 모드 버튼 연결
     const viewBtn = document.getElementById('view-mode-btn');
     if(viewBtn) {
         viewBtn.onclick = function() {
@@ -386,7 +378,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // 필터 버튼 연결
     document.querySelectorAll('#filter-members .filter-btn').forEach(btn => {
         btn.onclick = () => {
             document.querySelectorAll('#filter-members .filter-btn').forEach(b => b.classList.remove('active'));
@@ -395,7 +386,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     });
 
-    // 리셋 버튼 설정
     const resetBtn = document.getElementById('reset-btn');
     if (resetBtn) {
         resetBtn.onclick = () => {
@@ -406,7 +396,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // 모달 닫기 기능 설정
     const modal = document.getElementById('info-modal');
     const closeBtn = document.querySelector('.close-btn');
     if (closeBtn && modal) {
@@ -416,7 +405,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === modal) { modal.style.display = 'none'; }
     };
 });
-
 // 7. 카운터 업데이트 함수
 function updateCounter(member = "전체") {
     const filtered = member === "전체" ? pocaData : pocaData.filter(p => p.member === member);
