@@ -536,3 +536,20 @@ document.querySelector('.close-btn').onclick = () => modal.style.display = 'none
 window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; }
 
 document.addEventListener('DOMContentLoaded', () => render());
+
+function searchPoca() {
+    const query = document.getElementById('search-input').value.toLowerCase(); // 입력한 글자
+    const cards = document.querySelectorAll('.poca-card'); // 모든 포카 카드들
+
+    cards.forEach(card => {
+        // 카드 안의 텍스트(멤버명, 버전 등)를 가져옵니다.
+        const label = card.querySelector('.poca-label').innerText.toLowerCase();
+        
+        // 검색어가 포함되어 있으면 보여주고, 아니면 숨깁니다.
+        if (label.includes(query)) {
+            card.style.display = "";
+        } else {
+            card.style.display = "none";
+        }
+    });
+}

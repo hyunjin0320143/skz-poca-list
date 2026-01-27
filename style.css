@@ -82,3 +82,22 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
         text-align: center !important; /* 모바일에서 무조건 중앙 정렬 */
     }
 }
+
+.search-container {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+#search-input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 20px; /* 둥근 모양 */
+    font-size: 14px;
+    outline: none;
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+}
+
+#search-input:focus {
+    border-color: #007bff; /* 클릭 시 파란색 강조 */
+}
