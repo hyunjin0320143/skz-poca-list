@@ -447,7 +447,7 @@ function createCard(poca) {
     
     const safeImgPath = encodeURI(poca.img);
     
-    // 포카 하단에는 카테고리(폴더명)만 소문자로 표시
+    // 포카 하단: 배경 없이 소문자 폴더명(카테고리)만 표시
     card.innerHTML = `
         <img src="${safeImgPath}">
         <div class="poca-label">
@@ -455,7 +455,6 @@ function createCard(poca) {
         </div>
     `;
     
-    // 왼쪽 클릭: 수집 체크
     card.onclick = () => {
         card.classList.toggle('collected');
         localStorage.setItem(poca.unicode, card.classList.contains('collected'));
@@ -463,7 +462,7 @@ function createCard(poca) {
         updateCounter(activeBtn ? activeBtn.innerText : "전체");
     };
 
-    // 우클릭: 상세 정보(멤버, 버전, 앨범 등) 출력
+    // 우클릭 상세 정보: 카테고리 제외
     card.oncontextmenu = (e) => {
         e.preventDefault();
         const modal = document.getElementById('info-modal');
@@ -474,11 +473,10 @@ function createCard(poca) {
             modalImg.src = safeImgPath;
             modalInfo.innerHTML = `
                 <div style="line-height: 1.6;">
-                    <b style="font-size: 1.1em; display: block; margin-bottom: 5px;">${poca.member}</b>
-                    <strong>${poca.album}</strong><br>
-                    <span>${poca.version}</span><br>
-                    <span style="color: #888; font-size: 0.9em;">category: ${poca.category.toLowerCase()}</span><br>
-                    <small style="color: #bbb;">#${poca.unicode}</small>
+                    <b style="font-size: 1.15em; display: block; margin-bottom: 5px; color: #000;">${poca.member}</b>
+                    <strong style="color: #444;">${poca.album}</strong><br>
+                    <span style="color: #666;">${poca.version}</span><br>
+                    <small style="color: #bbb; display: block; margin-top: 5px;">#${poca.unicode}</small>
                 </div>`;
             modal.style.display = 'flex';
         }
@@ -486,7 +484,6 @@ function createCard(poca) {
 
     return card;
 }
-
 // 6. 페이지 로드 시 초기화 및 모든 버튼/모달 설정
 document.addEventListener('DOMContentLoaded', () => {
     render();

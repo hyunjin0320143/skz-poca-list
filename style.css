@@ -210,23 +210,20 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 
 /* 포카 하단 라벨 영역 */
 .poca-label {
-    margin-top: 8px;
+    margin-top: 6px;
     text-align: center;
 }
 
-/* 카테고리 텍스트 (소문자 전용) */
+/* 카테고리 텍스트 스타일: 배경 제거 */
 .poca-category {
     font-size: 11px;
-    color: #999;
-    background: #f8f8f8;
-    padding: 3px 8px;
-    border-radius: 50px; /* 알약 모양 */
+    color: #a0a0a0; /* 부드러운 회색 */
     display: inline-block;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
+    font-weight: 400;
 }
 
-/* 수집된 카드의 카테고리 강조 */
+/* 수집된 경우 글자색만 살짝 변경 (선택사항) */
 .collected .poca-category {
-    background: #eee;
-    color: #666;
+    color: #777;
 }
