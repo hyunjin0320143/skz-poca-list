@@ -407,6 +407,7 @@ const pocaData = rawPaths.map(path => {
 }).sort((a, b) => parseInt(b.unicode) - parseInt(a.unicode));
 
 // 4. 화면을 그려주는 함수 (render)
+// 4. 화면에 포카 목록을 그리는 함수
 function render(filterMember = "전체") {
     const gridContainer = document.getElementById('poca-container') || document.getElementById('pcGrid');
     if (!gridContainer) return;
@@ -439,7 +440,7 @@ function render(filterMember = "전체") {
     updateCounter(filterMember); 
 }
 
-// 5. 카드 한 장 만드는 함수 (우클릭 기능 추가됨!)
+// 5. 카드 한 장 만드는 함수 (하단 카테고리 표시 및 모달 최적화)
 function createCard(poca) {
     const card = document.createElement('div');
     card.className = 'poca-card';
@@ -447,12 +448,10 @@ function createCard(poca) {
     
     const safeImgPath = encodeURI(poca.img);
     
-    // 포카 하단: 배경 없이 소문자 폴더명(카테고리)만 표시
+    // 포카 하단: 하얀 배경 바 안에 소문자 카테고리 표시
     card.innerHTML = `
         <img src="${safeImgPath}">
-        <div class="poca-label">
-            <span class="poca-category">${poca.category.toLowerCase()}</span>
-        </div>
+        <div class="poca-label">${poca.category.toLowerCase()}</div>
     `;
     
     card.onclick = () => {
@@ -462,7 +461,7 @@ function createCard(poca) {
         updateCounter(activeBtn ? activeBtn.innerText : "전체");
     };
 
-    // 우클릭 상세 정보: 카테고리 제외
+    // 우클릭 상세 정보: 카테고리 제외하고 깔끔하게 표시
     card.oncontextmenu = (e) => {
         e.preventDefault();
         const modal = document.getElementById('info-modal');
@@ -472,18 +471,14 @@ function createCard(poca) {
         if (modal) {
             modalImg.src = safeImgPath;
             modalInfo.innerHTML = `
-                <div style="line-height: 1.6;">
-                    <b style="font-size: 1.15em; display: block; margin-bottom: 5px; color: #000;">${poca.member}</b>
+                <div style="line-height: 1.6; text-align: left;">
+                    <b style="font-size: 1.2em; display: block; margin-bottom: 5px; color: #000;">${poca.member}</b>
                     <strong style="color: #444;">${poca.album}</strong><br>
                     <span style="color: #666;">${poca.version}</span><br>
-                    <small style="color: #bbb; display: block; margin-top: 5px;">#${poca.unicode}</small>
+                    <small style="color: #bbb; display: block; margin-top: 8px;">#${poca.unicode}</small>
                 </div>`;
-            modal.style.display = 'flex';
+            modal.style.display = 'flex'; // 혹은 'block', CSS 설정에 맞춰 작동
         }
-    };
-
-    return card;
-}
 // 6. 페이지 로드 시 초기화 및 모든 버튼/모달 설정
 document.addEventListener('DOMContentLoaded', () => {
     render();
