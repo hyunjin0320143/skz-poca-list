@@ -115,8 +115,8 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 }
 
 #modal-info { 
-    padding: 0; 
-    text-align: center; /* 텍스트도 중앙으로 */
+    padding: 0 10px; 
+    text-align: left; /* 여기도 left로 확인! */
     line-height: 1.4; 
 }
 
