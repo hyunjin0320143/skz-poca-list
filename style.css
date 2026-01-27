@@ -130,3 +130,26 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 .poca-card:URI:not(.collected) img {
     filter: grayscale(100%) opacity(0.5);
 }
+
+/* 바구니 스타일: 가로로 꽉 차게 정렬 */
+#poca-container, #pcGrid, .grid {
+    display: grid !important; /* 강제로 그리드 적용 */
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+    gap: 15px !important;
+    padding: 20px;
+    width: 95%;
+    margin: 0 auto;
+}
+
+/* 개별 카드 크기 고정 */
+.poca-card {
+    width: 130px;
+    margin-bottom: 10px;
+}
+
+.poca-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+}
