@@ -410,20 +410,14 @@ const pocaData = rawPaths.map(path => {
 function render(filterMember = "전체") {
     const gridContainer = document.getElementById('poca-container') || document.getElementById('pcGrid');
     if (!gridContainer) return;
-    
-    // 1. 기존 내용 비우기
     gridContainer.innerHTML = '';
-    
-    // 2. 바구니에 직접 'grid' 클래스 추가 (이게 핵심!)
     gridContainer.className = 'grid'; 
     
     const filtered = filterMember === "전체" ? pocaData : pocaData.filter(p => p.member === filterMember);
 
     if (!isGroupedView) {
-        // 리스트 모드일 때: 바구니에 바로 카드들을 넣음
         filtered.forEach(poca => gridContainer.appendChild(createCard(poca)));
     } else {
-        // 그룹 모드일 때
         const groups = {};
         filtered.forEach(p => {
             const key = `${p.album} | ${p.version}`;
@@ -435,11 +429,9 @@ function render(filterMember = "전체") {
             const section = document.createElement('div');
             section.className = 'group-section';
             section.innerHTML = `<div class="group-title">${title}</div>`;
-            
             const subGrid = document.createElement('div');
-            subGrid.className = 'grid'; // 그룹 내부도 격자 적용
+            subGrid.className = 'grid';
             pocast.forEach(poca => subGrid.appendChild(createCard(poca)));
-            
             section.appendChild(subGrid);
             gridContainer.appendChild(section);
         }
@@ -447,7 +439,7 @@ function render(filterMember = "전체") {
     updateCounter(filterMember); 
 }
 
-// 5. 카드 한 장 만드는 함수
+// 5. 카드 한 장 만드는 함수 (우클릭 기능 추가됨!)
 function createCard(poca) {
     const card = document.createElement('div');
     card.className = 'poca-card';
@@ -459,6 +451,7 @@ function createCard(poca) {
         <div class="poca-label">${poca.member} - ${poca.version}</div>
     `;
     
+    // 왼쪽 클릭: 수집
     card.onclick = () => {
         card.classList.toggle('collected');
         localStorage.setItem(poca.unicode, card.classList.contains('collected'));
@@ -466,14 +459,33 @@ function createCard(poca) {
         updateCounter(activeBtn ? activeBtn.innerText : "전체");
     };
 
+    // 우클릭: 정보창 띄우기 (이 코드가 들어갔는지 확인하세요!)
+    card.oncontextmenu = (e) => {
+        e.preventDefault();
+        const modal = document.getElementById('info-modal');
+        const modalImg = document.getElementById('modal-img');
+        const modalInfo = document.getElementById('modal-info');
+
+        if (modal) {
+            modalImg.src = safeImgPath;
+            modalInfo.innerHTML = `
+                <div style="line-height: 1.6;">
+                    <strong>${poca.album}</strong><br>
+                    <span>${poca.version}</span><br>
+                    <small style="color: #888;">#${poca.unicode}</small>
+                </div>`;
+            modal.style.display = 'flex';
+        }
+    };
+
     return card;
 }
 
-// 6. 페이지 로드 시 초기화
+// 6. 페이지 로드 시 초기화 및 모든 버튼/모달 설정
 document.addEventListener('DOMContentLoaded', () => {
     render();
     
-    // 버튼 연결
+    // 뷰 모드 버튼 연결
     if(document.getElementById('view-mode-btn')) {
         document.getElementById('view-mode-btn').onclick = function() {
             isGroupedView = !isGroupedView;
@@ -483,6 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    // 필터 버튼 연결
     document.querySelectorAll('#filter-members .filter-btn').forEach(btn => {
         btn.onclick = () => {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -490,9 +503,8 @@ document.addEventListener('DOMContentLoaded', () => {
             render(btn.innerText);
         };
     });
-});
 
-// 7. 리셋 버튼 및 모달 닫기 설정
+    // 리셋 버튼 설정 (안으로 이동됨)
     const resetBtn = document.getElementById('reset-btn');
     if (resetBtn) {
         resetBtn.onclick = () => {
@@ -503,23 +515,18 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // 모달 닫기 기능 (X 버튼 클릭 시)
+    // 모달 닫기 기능 설정 (안으로 이동됨)
     const modal = document.getElementById('info-modal');
     const closeBtn = document.querySelector('.close-btn');
-    
     if (closeBtn && modal) {
-        closeBtn.onclick = () => {
-            modal.style.display = 'none';
-        };
+        closeBtn.onclick = () => { modal.style.display = 'none'; };
     }
-
-    // 모달 바깥 어두운 배경 클릭 시 닫기
     window.onclick = (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
-        }
+        if (e.target === modal) { modal.style.display = 'none'; }
     };
+});
 
+// 7. 카운터 업데이트 함수
 function updateCounter(member = "전체") {
     const filtered = member === "전체" ? pocaData : pocaData.filter(p => p.member === member);
     const collected = filtered.filter(p => localStorage.getItem(p.unicode) === 'true').length;
