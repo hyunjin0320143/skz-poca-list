@@ -9,10 +9,12 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 .group-title span { color: #bbb; margin: 0 10px; font-weight: normal; }
 
 /* 그리드 설정: 모바일 4장 정렬을 위해 minmax를 75px로 조정 */
-.grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); 
-    gap: 12px; 
+.grid, .group-section .grid {
+    display: grid !important;
+    /* PC에서는 기존처럼 110px~130px 유지 */
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)) !important;
+    gap: 12px !important;
+    width: 100%;
 }
 
 /* 포카 카드 디자인 */
@@ -42,17 +44,16 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 /* 수집된 포카: 선명하게 */
 .poca-card.collected img { 
     opacity: 1; 
-    filter: brightness(1);
 }
 
 /* [수정] 포카 하단 라벨 (배경 없이 텍스트만) */
 .poca-label { 
-    padding: 6px 0; 
+    padding: 5px 0; 
     font-size: 10px; 
-    color: #bbb; /* 미선택시 연한 회색 */
+    color: #999; /* 미선택시 연한 회색 */
     background: #fff; 
     font-weight: bold; 
-    text-transform: lowercase; /* 폴더명 소문자 */
+    text-transform: uppercase; /* 폴더명 소문자 */
     border-top: 1px solid #f1f1f1; 
 }
 
@@ -77,29 +78,22 @@ body { background-color: #ffffff; text-align: center; font-family: sans-serif; m
 .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #333; z-index: 10; }
 #modal-info { padding: 0 10px; text-align: left; line-height: 1.6; }
 
-/* 7. 모바일용 레이아웃 (한 줄에 4개 보장) */
+/* 7. 모바일용 레이아웃 (그룹 모드에서도 가로 4장 보장) */
 @media (max-width: 600px) {
-    /* 전체 리스트와 그룹화된 리스트 모두에 적용 */
     #poca-container, #pcGrid, .grid, .group-section .grid {
         display: grid !important;
+        /* 한 줄에 4개가 나오도록 최소폭 조절 */
         grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)) !important;
         gap: 8px !important;
-        padding: 10px 0; /* 좌우 여백 조절 */
+        padding: 10px 0;
     }
 
-    /* 그룹 제목 스타일 살짝 조정 */
+    .group-section {
+        padding: 0 10px; /* 그룹 간격 최적화 */
+    }
+
     .group-title {
         font-size: 14px;
-        margin-top: 20px;
-        margin-bottom: 10px;
-    }
-
-    .poca-card {
-        max-width: 100%; 
-    }
-
-    .poca-category {
-        font-size: 8px;
-        padding: 1px 4px;
+        margin-top: 25px;
     }
 }
