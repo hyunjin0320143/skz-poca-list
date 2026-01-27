@@ -1056,7 +1056,7 @@ function createCard(poca) {
         <div class="poca-label">${poca.category.toLowerCase()}</div>
     `;
     
-    card.onclick = () => {
+    card.onclick = (e) => {
         card.classList.toggle('collected');
         localStorage.setItem(poca.unicode, card.classList.contains('collected'));
         const activeBtn = document.querySelector('#filter-members .active');
@@ -1085,7 +1085,7 @@ function createCard(poca) {
     return card;
 }
 
-// 6. 페이지 로드 시 초기화
+// 6. 페이지 로드 시 초기화 및 모든 버튼 설정
 document.addEventListener('DOMContentLoaded', () => {
     render();
     
@@ -1137,6 +1137,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert("체크된 포카가 하나도 없어서 백업할 데이터가 없어요!");
                 return;
             }
+
             const dataString = btoa(encodeURIComponent(JSON.stringify(collectedIds)));
             const textArea = document.createElement("textarea");
             document.body.appendChild(textArea);
@@ -1153,6 +1154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         importBtn.onclick = () => {
             const code = prompt("백업 코드를 입력해주세요.");
             if (!code) return;
+
             try {
                 const decodedIds = JSON.parse(decodeURIComponent(atob(code)));
                 if (confirm(`${decodedIds.length}개의 데이터를 불러올까요?`)) {
@@ -1166,20 +1168,17 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-// [수정] 정보창 닫기 및 클릭 전파 방지
+    // [최종 수정] 정보창 닫기: 클릭 전파를 막아 뒤의 포카가 클릭되지 않게 함
     const modal = document.getElementById('info-modal');
     if (modal) {
         modal.addEventListener('click', function(e) {
-            // 정보창(이미지 포함) 어디든 누르면 닫기
             modal.style.display = 'none';
-            
-            // ★ 중요: 클릭 신호가 뒤에 있는 포카 리스트로 전달되지 않게 차단!
-            e.stopPropagation();
-            e.preventDefault();
-        });
+            e.stopPropagation(); // ★ 뒤의 포카 클릭 방지
+        }, true); // ★ 우선순위 높임
     }
+});
 
-// 7. 카운터 업데이트
+// 7. 카운터 업데이트 함수
 function updateCounter(member = "전체", searchTerm = "") {
     const filtered = pocaData.filter(p => {
         const matchesMember = (member === "전체" || p.member === member);
