@@ -420,7 +420,52 @@ const searchInput = document.getElementById('search-input');
             render(currentMember);
         };
     }
-}); // <-- 여기서 DOMContentLoaded가 끝납니다.
+const exportBtn = document.getElementById('export-btn');
+    if (exportBtn) {
+        exportBtn.onclick = () => {
+            const collectedIds = pocaData
+                .filter(p => localStorage.getItem(p.unicode) === 'true')
+                .map(p => p.unicode);
+            
+            if (collectedIds.length === 0) {
+                alert("체크된 포카가 하나도 없어서 백업할 데이터가 없어요!");
+                return;
+            }
+
+            const dataString = btoa(encodeURIComponent(JSON.stringify(collectedIds)));
+            
+            const textArea = document.createElement("textarea");
+            document.body.appendChild(textArea);
+            textArea.value = dataString;
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            alert("백업 코드가 복사되었습니다! 메모장이나 카톡에 보관하세요.");
+        };
+    }
+
+    const importBtn = document.getElementById('import-btn');
+    if (importBtn) {
+        importBtn.onclick = () => {
+            const code = prompt("복사했던 백업 코드를 입력해주세요.");
+            if (!code) return;
+
+            try {
+                const decodedIds = JSON.parse(decodeURIComponent(atob(code)));
+                if (confirm(`${decodedIds.length}개의 데이터를 불러올까요? 기존 데이터는 사라집니다.`)) {
+                    pocaData.forEach(p => localStorage.removeItem(p.unicode));
+                    decodedIds.forEach(id => localStorage.setItem(id, 'true'));
+                    location.reload();
+                }
+            } catch (e) {
+                alert("코드가 올바르지 않습니다. 다시 확인해주세요.");
+            }
+        };
+    }
+    // ★ 추가 끝 ★
+
+}); // <-- DOMContentLoaded가 끝나는 지점
 
 // 7. 카운터 업데이트 함수 (검색 결과까지 반영)
 function updateCounter(member = "전체", searchTerm = "") {
